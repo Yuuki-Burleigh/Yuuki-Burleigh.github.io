@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Yuuki Burleigh // Network & Cloud Operations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <style>
+        :root {
+            --bg: #0b0c0e;
+            --bg-2: #111316;
+            --panel: #121417;
+            --line: #23262b;
+            --line-2: #2e3238;
+            --txt: #eef0f2;
+            --txt-dim: #8b9097;
+            --txt-faint: #5a5f66;
+            --amber: #ffaa3c;
+            --amber-soft: #ffbf6b;
+            --amber-glow: rgba(255, 170, 60, 0.16);
+            --cyan: #5fd0d8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0 }
+
+        html { scroll-behavior: smooth }
+
+        body {
+            background: var(--bg);
+            color: var(--txt);
+            font-family: 'Sora', system-ui, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection { background: var(--amber); color: #1a1206 }
+
+        ::-webkit-scrollbar { width: 11px; height: 11px }
+        ::-webkit-scrollbar-track { background: var(--bg) }
+        ::-webkit-scrollbar-thumb { background: #2c3036; border: 3px solid var(--bg); border-radius: 10px }
+        ::-webkit-scrollbar-thumb:hover { background: var(--amber) }
+
+        /* ---- ATMOSPHERE LAYERS ---- */
+        canvas#netCanvas {
+            position: fixed; inset: 0; width: 100%; height: 100%;
+            z-index: 0; opacity: 0.55; pointer-events: none
+        }
+
+        .grain {
+            position: fixed; inset: 0; z-index: 1; pointer-events: none;
+            opacity: 0.035; mix-blend-mode: screen;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .vignette {
+            position: fixed; inset: 0; z-index: 1; pointer-events: none;
+            background: radial-gradient(ellipse at 50% 0%, transparent 40%, rgba(0,0,0,0.55) 100%);
+        }
+
+        .wrap {
+            position: relative; z-index: 2;
+            max-width: 1500px; margin: 0 auto;
+            padding: 0 clamp(20px, 4vw, 64px) 100px
+        }
+
+        /* ---- STATUS STRIP ---- */
+        .statusbar {
+            position: relative; z-index: 2;
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem; letter-spacing: 1px; color: var(--txt-faint);
+            max-width: 1500px; margin: 0 auto;
+            padding: 14px clamp(20px, 4vw, 64px);
+            border-bottom: 1px solid var(--line);
+            text-transform: uppercase;
+        }
+        .statusbar .seg { color: var(--txt-dim) }
+        .statusbar .dot {
+            width: 7px; height: 7px; border-radius: 50%; background: var(--amber);
+            box-shadow: 0 0 8px var(--amber); display: inline-block;
+            animation: blip 2.4s ease-in-out infinite;
+        }
+        .statusbar .right { margin-left: auto; color: var(--txt-faint) }
+        @keyframes blip { 0%,100% { opacity: 1 } 50% { opacity: .25 } }
+
+        /* ---- HERO / TERMINAL ---- */
+        .hero {
+            padding: clamp(60px, 9vw, 130px) 0 clamp(50px, 7vw, 100px);
+        }
+
+        .terminal {
+            border: 1px solid var(--line-2);
+            background: linear-gradient(180deg, rgba(20,22,25,0.82), rgba(13,14,16,0.82));
+            backdrop-filter: blur(2px);
+            border-radius: 6px;
+            max-width: 760px;
+            box-shadow: 0 30px 80px -30px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.03);
+            position: relative;
+            overflow: hidden;
+        }
+        .terminal::before {
+            content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--amber), transparent);
+            opacity: .6;
+        }
+
+        .term-bar {
+            display: flex; align-items: center; gap: 8px;
+            padding: 11px 16px; border-bottom: 1px solid var(--line);
+            font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+            color: var(--txt-faint); letter-spacing: 1px;
+        }
+        .term-bar i {
+            width: 10px; height: 10px; border-radius: 50%;
+            border: 1px solid var(--line-2); display: inline-block;
+        }
+        .term-bar i:nth-child(2) { border-color: #44484e }
+        .term-bar span { margin-left: 10px }
+
+        .term-body {
+            padding: clamp(24px, 3.5vw, 44px) clamp(22px, 3.5vw, 48px) clamp(28px, 4vw, 50px);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .boot-line {
+            font-size: 0.82rem; color: var(--txt-dim); letter-spacing: .5px;
+            margin-bottom: 7px; opacity: 0;
+            animation: lineIn .35s forwards;
+        }
+        .boot-line .ok { color: var(--amber) }
+        .boot-line:nth-child(1) { animation-delay: .15s }
+        .boot-line:nth-child(2) { animation-delay: .5s }
+        .boot-line:nth-child(3) { animation-delay: .85s }
+        @keyframes lineIn { from { opacity: 0; transform: translateY(4px) } to { opacity: .85; transform: none } }
+
+        .hero-name {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 700;
+            font-size: clamp(2.3rem, 7vw, 5.3rem);
+            line-height: 0.98;
+            letter-spacing: -1px;
+            color: var(--txt);
+            margin: clamp(18px, 2.5vw, 30px) 0 10px;
+            opacity: 0; animation: lineIn .6s 1.25s forwards;
+            text-shadow: 0 0 32px rgba(255,170,60,0.12);
+        }
+        .hero-name .amber { color: var(--amber) }
+
+        .hero-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.78rem, 1.3vw, 0.98rem);
+            color: var(--txt-dim); letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: clamp(24px, 3vw, 38px);
+            opacity: 0; animation: lineIn .6s 1.5s forwards;
+        }
+        .hero-title::before { content: "> "; color: var(--amber) }
+
+        .hero-links { display: flex; gap: 12px; flex-wrap: wrap;
+            opacity: 0; animation: lineIn .6s 1.75s forwards }
+
+        .hero-link {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--txt-dim); text-decoration: none;
+            font-size: clamp(0.74rem, 0.9vw, 0.86rem); letter-spacing: .5px;
+            border: 1px solid var(--line-2);
+            padding: 11px 20px; border-radius: 4px;
+            transition: color .25s, border-color .25s, background .25s, transform .25s;
+            position: relative;
+        }
+        .hero-link::before { content: "["; color: var(--amber); margin-right: 7px; opacity: 0; transition: opacity .25s }
+        .hero-link::after  { content: "]"; color: var(--amber); margin-left: 7px;  opacity: 0; transition: opacity .25s }
+        .hero-link:hover {
+            color: var(--txt); border-color: var(--amber);
+            background: var(--amber-glow); transform: translateY(-2px);
+        }
+        .hero-link:hover::before, .hero-link:hover::after { opacity: 1 }
+
+        /* ---- SECTIONS ---- */
+        section { margin-bottom: clamp(56px, 8vw, 110px) }
+
+        .section-header { margin-bottom: clamp(26px, 3.5vw, 46px) }
+
+        .section-title {
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: clamp(1.15rem, 2.2vw, 1.9rem);
+            font-weight: 600; letter-spacing: 1px;
+            color: var(--txt); text-transform: uppercase;
+            display: flex; align-items: baseline; gap: 14px;
+        }
+        .section-title .slash { color: var(--amber); font-family: 'JetBrains Mono', monospace }
+        .section-title .count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem; color: var(--txt-faint);
+            letter-spacing: 1px; margin-left: auto; font-weight: 400;
+        }
+        .rule {
+            height: 1px; margin-top: 16px; position: relative;
+            background: linear-gradient(90deg, var(--amber) 0%, var(--line) 14%, var(--line) 100%);
+        }
+        .rule::after {
+            content: ""; position: absolute; right: 0; top: -2px;
+            width: 5px; height: 5px; background: var(--txt-faint); border-radius: 50%;
+        }
+
+        /* ---- GRID ---- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
+            gap: clamp(16px, 1.8vw, 26px)
+        }
+
+        /* ---- LAB CARDS ---- */
+        .lab-card {
+            position: relative;
+            border: 1px solid var(--line);
+            background: var(--panel);
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: pointer;
+            display: flex; flex-direction: column;
+            transition: transform .35s cubic-bezier(.2,.7,.2,1), border-color .35s, box-shadow .35s;
+            opacity: 0; transform: translateY(26px);
+        }
+        .lab-card.in { opacity: 1; transform: none }
+        .lab-card::before, .lab-card::after {
+            content: ""; position: absolute; width: 16px; height: 16px;
+            border-color: var(--amber); opacity: 0;
+            transition: opacity .35s, width .35s, height .35s; z-index: 3;
+        }
+        .lab-card::before { top: 9px; left: 9px; border-top: 2px solid; border-left: 2px solid }
+        .lab-card::after  { bottom: 9px; right: 9px; border-bottom: 2px solid; border-right: 2px solid }
+        .lab-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--line-2);
+            box-shadow: 0 26px 60px -24px rgba(0,0,0,0.85), 0 0 0 1px var(--amber-glow);
+        }
+        .lab-card:hover::before, .lab-card:hover::after { opacity: 1; width: 22px; height: 22px }
+
+        .pdf-thumb {
+            width: 100%; background: #16181b; display: block;
+            overflow: hidden; position: relative;
+            border-bottom: 1px solid var(--line);
+            aspect-ratio: 1 / 1.05;
+        }
+        .pdf-thumb canvas { width: 100%; height: auto; display: block }
+        .pdf-thumb::after {
+            content: ""; position: absolute; inset: 0; pointer-events: none;
+            background:
+                linear-gradient(180deg, rgba(11,12,14,0) 55%, rgba(11,12,14,0.55) 100%),
+                rgba(255,170,60,0.10);
+            mix-blend-mode: multiply;
+            transition: opacity .4s; opacity: 1;
+        }
+        .lab-card:hover .pdf-thumb::after { opacity: 0 }
+        .scanline {
+            position: absolute; inset: 0; pointer-events: none; z-index: 2;
+            background: linear-gradient(rgba(255,170,60,0) 0%, rgba(255,170,60,0.10) 50%, rgba(255,170,60,0) 100%);
+            background-size: 100% 8px; opacity: 0; transition: opacity .4s;
+        }
+        .lab-card:hover .scanline { opacity: 1; animation: scan 2.4s linear infinite }
+        @keyframes scan { from { background-position: 0 -100% } to { background-position: 0 200% } }
+
+        .pdf-thumb-placeholder {
+            color: var(--txt-faint); text-align: center;
+            padding: 0; position: absolute; inset: 0;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .pdf-thumb-placeholder svg { display: block; margin: 0 auto 14px; opacity: .35 }
+        .pdf-thumb-placeholder p {
+            font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;
+        }
+        .pdf-thumb-placeholder p::after {
+            content: "_"; animation: blip 1s steps(1) infinite; color: var(--amber)
+        }
+
+        .lab-body {
+            padding: clamp(18px, 1.8vw, 26px) clamp(18px, 2vw, 28px) clamp(20px, 2vw, 26px);
+            display: flex; flex-direction: column; flex: 1;
+        }
+        .lab-meta {
+            display: flex; align-items: center; gap: 12px;
+            font-family: 'JetBrains Mono', monospace; margin-bottom: 13px;
+        }
+        .lab-index {
+            font-size: 1.05rem; font-weight: 700; color: var(--amber);
+            letter-spacing: 1px;
+        }
+        .lab-tag {
+            font-size: 0.66rem; color: var(--txt-dim); letter-spacing: 2px;
+            text-transform: uppercase; padding: 4px 10px;
+            border: 1px solid var(--line-2); border-radius: 999px;
+        }
+        .lab-title {
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: clamp(1rem, 1.25vw, 1.22rem); font-weight: 600;
+            color: var(--txt); margin-bottom: 10px; line-height: 1.3;
+        }
+        .lab-desc {
+            font-size: clamp(0.82rem, 0.9vw, 0.9rem);
+            color: var(--txt-dim); line-height: 1.72; flex: 1;
+        }
+        .view-btn {
+            margin-top: 20px; align-self: flex-start;
+            background: transparent;
+            border: 1px solid var(--line-2);
+            color: var(--txt-dim);
+            font-family: 'JetBrains Mono', monospace;
+            padding: 10px 18px; border-radius: 4px; cursor: pointer;
+            font-size: 0.78rem; letter-spacing: 1px;
+            transition: all .25s; position: relative; overflow: hidden;
+        }
+        .view-btn::after {
+            content: ""; position: absolute; inset: 0;
+            background: var(--amber); transform: translateX(-101%);
+            transition: transform .35s cubic-bezier(.2,.7,.2,1); z-index: -1;
+        }
+        .view-btn { z-index: 0 }
+        .view-btn:hover { color: #1a1206; border-color: var(--amber) }
+        .view-btn:hover::after { transform: none }
+
+        /* ---- CERT CARDS ---- */
+        .cert-card {
+            position: relative;
+            border: 1px solid var(--line);
+            background: var(--panel);
+            border-radius: 6px;
+            padding: clamp(22px, 2.4vw, 34px);
+            display: flex; gap: clamp(18px, 2vw, 28px); align-items: center;
+            transition: border-color .3s, box-shadow .3s, transform .3s;
+            opacity: 0; transform: translateY(26px);
+        }
+        .cert-card.in { opacity: 1; transform: none }
+        .cert-card:hover {
+            border-color: var(--line-2); transform: translateY(-4px);
+            box-shadow: 0 22px 50px -24px rgba(0,0,0,0.8), 0 0 0 1px var(--amber-glow);
+        }
+        .cert-card::before {
+            content: "VERIFIED"; position: absolute; top: 14px; right: 16px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+            letter-spacing: 2px; color: var(--amber);
+            border: 1px solid var(--amber-glow); padding: 3px 8px; border-radius: 3px;
+        }
+        .cert-badge {
+            width: clamp(74px, 7vw, 104px); height: clamp(74px, 7vw, 104px);
+            border: 1px solid var(--line-2); border-radius: 8px;
+            background: #fff; display: flex; align-items: center; justify-content: center;
+            overflow: hidden; flex-shrink: 0; padding: 8px;
+        }
+        .cert-badge img { width: 100%; height: 100%; object-fit: contain }
+        .cert-badge-icon { font-size: 2.4rem }
+        .cert-name {
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: clamp(1rem, 1.3vw, 1.32rem); font-weight: 600;
+            color: var(--txt); margin-bottom: 6px;
+        }
+        .cert-issuer {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.76rem, 0.85vw, 0.88rem);
+            color: var(--txt-dim); margin-bottom: 14px; letter-spacing: .5px;
+        }
+        .cert-verify {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.76rem; color: var(--txt-dim);
+            border: 1px solid var(--line-2); padding: 8px 14px;
+            border-radius: 4px; text-decoration: none; letter-spacing: .5px;
+            transition: all .25s;
+        }
+        .cert-verify:hover { color: #1a1206; background: var(--amber); border-color: var(--amber) }
+
+        /* ---- FOOTER ---- */
+        footer {
+            border-top: 1px solid var(--line);
+            padding: 40px 0 10px; text-align: center;
+            color: var(--txt-faint);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem; letter-spacing: 1px;
+        }
+        footer .links { margin-bottom: 14px; display: flex; gap: 18px; justify-content: center; flex-wrap: wrap }
+        footer a { color: var(--txt-dim); text-decoration: none; transition: color .2s }
+        footer a:hover { color: var(--amber) }
+        footer .sig { color: var(--txt-faint); opacity: .6 }
+
+        /* ---- PDF MODAL ---- */
+        .modal {
+            display: none; position: fixed; inset: 0;
+            background: rgba(6,7,8,0.96);
+            backdrop-filter: blur(6px);
+            z-index: 1000; flex-direction: column; align-items: center;
+            padding: 0;
+        }
+        .modal.open { display: flex; animation: lineIn .3s }
+        .modal-bar {
+            display: flex; align-items: center; gap: 14px;
+            width: 100%; max-width: 1200px;
+            padding: 16px clamp(16px, 3vw, 28px);
+            border-bottom: 1px solid var(--line); flex-shrink: 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .modal-bar .tag { color: var(--amber); font-size: 0.78rem; letter-spacing: 1px }
+        .modal-title {
+            color: var(--txt); font-size: 0.88rem; font-weight: 500;
+            flex: 1; text-align: left; letter-spacing: .5px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .modal-bar button {
+            background: transparent; border: 1px solid var(--line-2);
+            color: var(--txt-dim); padding: 9px 18px; border-radius: 4px;
+            cursor: pointer; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem; letter-spacing: 1px; transition: all .2s;
+        }
+        .modal-bar button:hover { border-color: var(--amber); color: var(--amber) }
+        .pdf-scroll-container {
+            flex: 1; width: 100%; overflow-y: auto;
+            display: flex; flex-direction: column; align-items: center;
+            gap: 22px; padding: 28px clamp(12px,3vw,28px) 60px;
+        }
+        .pdf-page-canvas {
+            max-width: 100%; background: #fff;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+            display: block; border-radius: 2px;
+        }
+        .modal-loading {
+            color: var(--txt-dim); padding: 60px;
+            font-family: 'JetBrains Mono', monospace; letter-spacing: 1px;
+        }
+        .modal-loading::after { content: "_"; animation: blip 1s steps(1) infinite; color: var(--amber) }
+
+        @media (max-width: 560px) {
+            .cert-card { flex-direction: column; align-items: flex-start }
+            .cert-card::before { top: 12px; right: 12px }
+            .statusbar .right { display: none }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important }
+            .lab-card, .cert-card, .hero-name, .hero-title, .hero-links, .boot-line { opacity: 1 !important; transform: none !important }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="netCanvas"></canvas>
+    <div class="grain"></div>
+    <div class="vignette"></div>
+
+    <div class="statusbar">
+        <span class="dot"></span>
+        <span>node://yuuki-burleigh</span>
+        <span class="seg">— SEC · NET · CLOUD</span>
+        <span class="right" id="clock">--:--:-- UTC</span>
+    </div>
+
+    <div class="wrap">
+
+        <!-- HERO -->
+        <div class="hero">
+            <div class="terminal">
+                <div class="term-bar">
+                    <i></i><i></i><i></i>
+                    <span>session — operator profile</span>
+                </div>
+                <div class="term-body">
+                    <div class="boot-line">$ initializing operator profile<span class="ok"> ...</span></div>
+                    <div class="boot-line">$ loading credentials<span class="ok"> [ OK ]</span></div>
+                    <div class="boot-line">$ link established<span class="ok"> [ ONLINE ]</span></div>
+
+                    <h1 class="hero-name">Yuuki<br><span class="amber">Burleigh</span></h1>
+                    <div class="hero-title">Network &amp; Cloud Professional</div>
+                    <div class="hero-links">
+                        <a class="hero-link" href="mailto:yuukiburleigh22@gmail.com">email</a>
+                        <a class="hero-link" href="https://linkedin.com/in/yuuki-burleigh" target="_blank">linkedin</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LAB DOCS -->
+        <section>
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="slash">//</span> Lab Documentation
+                    <span class="count" id="labCount"></span>
+                </div>
+                <div class="rule"></div>
+            </div>
+            <div class="grid" id="labGrid"></div>
+        </section>
+
+        <!-- CERTS -->
+        <section>
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="slash">//</span> Certifications
+                    <span class="count" id="certCount"></span>
+                </div>
+                <div class="rule"></div>
+            </div>
+            <div class="grid" id="certGrid"></div>
+        </section>
+
+        <footer>
+            <div class="links">
+                <a href="mailto:yuukiburleigh22@gmail.com">yuukiburleigh22@gmail.com</a>
+                <a href="https://linkedin.com/in/yuuki-burleigh" target="_blank">linkedin.com/in/yuuki-burleigh</a>
+            </div>
+            <div class="sig">// end of transmission — yuuki burleigh</div>
+        </footer>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal" id="pdfModal">
+        <div class="modal-bar">
+            <span class="tag">DOC&gt;</span>
+            <span class="modal-title" id="modalTitle"></span>
+            <button onclick="zoomBy(-0.15)" title="Zoom out">[ &minus; ]</button>
+            <span id="zoomLabel" style="color:var(--txt-dim);font-size:0.78rem;min-width:48px;text-align:center">100%</span>
+            <button onclick="zoomBy(0.15)" title="Zoom in">[ &plus; ]</button>
+            <button onclick="closeModal()">[ ESC ] CLOSE</button>
+        </div>
+        <div class="pdf-scroll-container" id="pdfScrollContainer"></div>
+    </div>
+
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        /* ---- LIVE CLOCK ---- */
+        (function () {
+            const el = document.getElementById('clock');
+            function tick() {
+                el.textContent = new Date().toISOString().slice(11, 19) + ' UTC';
+            }
+            tick(); setInterval(tick, 1000);
+        })();
+
+        /* ---- NETWORK GRAPH BACKGROUND ---- */
+        (function () {
+            const c = document.getElementById('netCanvas'), ctx = c.getContext('2d');
+            let nodes = [], w, h, raf;
+            function init() {
+                w = c.width = window.innerWidth;
+                h = c.height = window.innerHeight;
+                const count = Math.min(80, Math.floor(w * h / 19000));
+                nodes = [];
+                for (let i = 0; i < count; i++) {
+                    nodes.push({
+                        x: Math.random() * w, y: Math.random() * h,
+                        vx: (Math.random() - 0.5) * 0.28,
+                        vy: (Math.random() - 0.5) * 0.28,
+                        r: Math.random() * 1.4 + 0.7
+                    });
+                }
+            }
+            function frame() {
+                ctx.clearRect(0, 0, w, h);
+                for (const n of nodes) {
+                    n.x += n.vx; n.y += n.vy;
+                    if (n.x < 0 || n.x > w) n.vx *= -1;
+                    if (n.y < 0 || n.y > h) n.vy *= -1;
+                }
+                for (let i = 0; i < nodes.length; i++) {
+                    for (let j = i + 1; j < nodes.length; j++) {
+                        const a = nodes[i], b = nodes[j];
+                        const dx = a.x - b.x, dy = a.y - b.y;
+                        const d = Math.hypot(dx, dy);
+                        if (d < 150) {
+                            const al = (1 - d / 150) * 0.5;
+                            ctx.strokeStyle = 'rgba(255,170,60,' + al + ')';
+                            ctx.lineWidth = 0.6;
+                            ctx.beginPath();
+                            ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                for (const n of nodes) {
+                    ctx.fillStyle = 'rgba(255,191,107,0.85)';
+                    ctx.beginPath();
+                    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                raf = requestAnimationFrame(frame);
+            }
+            window.addEventListener('resize', () => { cancelAnimationFrame(raf); init(); frame(); });
+            init();
+            if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                frame();
+            } else {
+                for (const n of nodes) { ctx.fillStyle = 'rgba(255,191,107,0.6)'; ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill(); }
+            }
+        })();
+
+        /* =============================================
+           LAB DOCS
+           To add a lab: add an object to this array.
+           "file" = path to your PDF relative to index.html
+           ============================================= */
+        const labs = [
+            {
+                title: "Designing a Multi-Area OSPF Network",
+                desc: "Lab Documentation of creating the Multi-Area OSPF Network. Includes commands, explanations, final router configurations, and proof of functionality. Also includes a background regarding the topic along with the labs purpose.",
+                tag: "Networking",
+                file: "labs/Designing a Multi-Area OSPF Network.pdf"
+            },
+            {
+                title: "Designing a Multiprotocol Network with BGP",
+                desc: "Lab Documentation of creating the BGP, OSPF, EIGRP, IS-IS Network. Includes commands, explanations, final router/switch configurations, and proof of functionality. Also includes a background regarding the topic along with the labs purpose.",
+                tag: "Networking",
+                file: "labs/Designing a Multiprotocol Network with BGP.pdf"
+            },
+            {
+                title: "Layer 2 Attacks and Mitigations",
+                desc: "Lab Documentation of attacking and securing a network from layer 2 attacks using tools in Kali Linux. Includes commands, screenshots, explanations, and final switch configurations, and proof of functionality. Also includes a background regarding the topic along with the labs purpose.",
+                tag: "Security",
+                file: "labs/Layer 2 Attacks and Mitigations.pdf"
+            },
+            {
+                title: "FortiGate-40F Factory Reset and Initial SOHO Configuration",
+                desc: "Lab Documentation of factory resetting a FortiGate-40F firewall and configuring basic security measures. Includes screenshots, explanations, and proof of functionality. Also includes background on the topic and purpose of the lab.",
+                tag: "Firewall",
+                file: "labs/FortiGate-40F Factory Reset and Initial Configuration.pdf"
+            },
+            {
+                title: "Setting up a PA-220 Firewall for a SOHO Environment",
+                desc: "Lab Documentation of setting up a PA220 for secure internet access for a SOHO environment. Includes screenshots, explanations, final firewall configuration, and proof of functionality. Also includes a background regarding the topic along with the labs purpose.",
+                tag: "Firewall",
+                file: "labs/Palo Alto 220 Small Office Home Office Firewall Configuration.pdf"
+            },
+            {
+                title: "Configuring GlobalProtect RAVPN on a PA-220 Firewall",
+                desc: "Lab Documentation of configuring a Palo Alto 220 firewall as a VPN server so outside users can access internal resources remotely. Includes screenshots, explanations, and proof of functionality. Also includes background on the topic and purpose of the lab.",
+                tag: "Firewall",
+                file: "labs/Configuring GlobalProtect Remote Access VPN on a PA220 Firewall.pdf"
+            },
+            {
+                title: "PA-220 Web Filtering for an Elementary School Environment",
+                desc: "Lab Documentation of setting up web filtering on the PA220 firewall. Includes screenshots, explanations, and proof of functionality. Also includes a background regarding the topic along with the labs purpose.",
+                tag: "Firewall",
+                file: "labs/Setting up PA220 Web Filtering for an Elementary School Environment.pdf"
+            },
+            {
+                title: "Setting up Local AI with Web UI Integration",
+                desc: "Lab Documentation of setting up the local AI with a Web UI accessible from anywhere in the local network. Includes screenshots, commands, explanations, specific prompts, and proof of functionality. Also includes a background regarding the topic along with the labs purpose.",
+                tag: "AI / Infrastructure",
+                file: "labs/Setting up Local AI with Web UI Integration.pdf"
+            },
+            {
+                title: "AWS: IAM, VPC, and EC2 Configuration",
+                desc: "Lab Documentation of the first three labs in AWS Cloud Foundations: Configuring Identity and Access Management (IAM), Virtual Private Cloud (VPC), and Elastic Compute Cloud (EC2). Includes screenshots, explanations, and proof of completion. Also Includes background to each topic along with the purposes of each lab.",
+                tag: "Cloud / AWS",
+                file: "labs/AWS Academy Cloud Foundations – Configuring Identity and Access Management, Virtual Private Cloud, and Elastic Compute Cloud.pdf"
+            }
+        ];
+
+        /* =============================================
+           CERTIFICATIONS
+           ============================================= */
+        const certs = [
+            {
+                name: "Cisco Certified Network Associate",
+                issuer: "Cisco",
+                badge: "badges/cisco_logo.jpg",
+                verify: "https://cp.certmetrics.com/cisco/en/public/verify/credential/9af26c569bb14aa3aca9fdc608da9e56"
+            },
+            {
+                name: "AWS Certified Cloud Practitioner",
+                issuer: "Amazon Web Services",
+                badge: "badges/amazon_web_services_logo.jpg",
+                verify: "https://cp.certmetrics.com/amazon/en/public/verify/credential/f745f4743fff4c5983d05cb94238844a"
+            }
+        ];
+
+        /* ---- SCROLL REVEAL ---- */
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+        }, { threshold: 0.12 });
+
+        /* ---- RENDER CERTS ---- */
+        const certGrid = document.getElementById('certGrid');
+        document.getElementById('certCount').textContent = `[ ${String(certs.length).padStart(2, '0')} ]`;
+        certs.forEach((cert, ci) => {
+            const d = document.createElement('div');
+            d.className = 'cert-card';
+            d.style.transitionDelay = (ci * 0.08) + 's';
+            d.innerHTML = `
+      <div class="cert-badge">${cert.badge ? `<img src="${cert.badge}" alt="${cert.name} badge">` : `<span class="cert-badge-icon">&#127941;</span>`}</div>
+      <div>
+        <div class="cert-name">${cert.name}</div>
+        <div class="cert-issuer">${cert.issuer}</div>
+        <a class="cert-verify" href="${cert.verify}" target="_blank">verify_credential &#8599;</a>
+      </div>`;
+            certGrid.appendChild(d);
+            io.observe(d);
+        });
+
+        /* ---- RENDER LABS ---- */
+        const labGrid = document.getElementById('labGrid');
+        document.getElementById('labCount').textContent = `[ ${String(labs.length).padStart(2, '0')} ]`;
+        const pdfCache = {};
+        let userZoom = 1, currentPdf = null;
+
+        labs.forEach((lab, i) => {
+            const d = document.createElement('div');
+            d.className = 'lab-card';
+            d.style.transitionDelay = ((i % 3) * 0.08 + Math.floor(i / 3) * 0.04) + 's';
+            if (lab.file) d.setAttribute('onclick', `openPdf(${i})`);
+            const idx = String(i + 1).padStart(2, '0');
+            d.innerHTML = `
+    <div class="pdf-thumb" id="thumb-${i}">
+      <div class="scanline"></div>
+      <div class="pdf-thumb-placeholder">
+        <svg width="40" height="48" viewBox="0 0 36 44"><rect x="1" y="1" width="34" height="42" rx="3" stroke="#ffaa3c" stroke-width="1.2" fill="none"/><path d="M9 12h18M9 20h18M9 28h12" stroke="#ffaa3c" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <p>${lab.file ? 'decoding' : 'no file'}</p>
+      </div>
+    </div>
+    <div class="lab-body">
+      <div class="lab-meta">
+        <span class="lab-index">${idx}</span>
+        <span class="lab-tag">${lab.tag}</span>
+      </div>
+      <div class="lab-title">${lab.title}</div>
+      <div class="lab-desc">${lab.desc}</div>
+      ${lab.file ? `<button class="view-btn" onclick="event.stopPropagation();openPdf(${i})">access_file &rarr;</button>` : ''}
+    </div>`;
+            labGrid.appendChild(d);
+            io.observe(d);
+            if (lab.file) loadThumb(i, lab.file);
+        });
+
+        async function loadThumb(i, url) {
+            try {
+                const pdf = await pdfjsLib.getDocument(url).promise;
+                pdfCache[i] = pdf;
+                const page = await pdf.getPage(1);
+                const vp = page.getViewport({ scale: 1 });
+                const thumb = document.getElementById(`thumb-${i}`);
+                const containerWidth = thumb.clientWidth || 300;
+                const dpr = window.devicePixelRatio || 1;
+                const scale = (containerWidth / vp.width) * dpr;
+                const vp2 = page.getViewport({ scale });
+                const cv = document.createElement('canvas');
+                cv.width = vp2.width; cv.height = vp2.height;
+                cv.style.width = containerWidth + 'px';
+                cv.style.height = (vp2.height / dpr) + 'px';
+                await page.render({ canvasContext: cv.getContext('2d'), viewport: vp2 }).promise;
+                const scan = thumb.querySelector('.scanline');
+                thumb.innerHTML = '';
+                thumb.appendChild(cv);
+                if (scan) thumb.appendChild(scan);
+            } catch (e) {
+                const thumb = document.getElementById(`thumb-${i}`);
+                const p = thumb.querySelector('p');
+                if (p) p.textContent = 'load error';
+            }
+        }
+
+        async function openPdf(i) {
+            const lab = labs[i];
+            if (!lab.file) return;
+
+            document.getElementById('pdfModal').classList.add('open');
+            document.getElementById('modalTitle').textContent = lab.title;
+
+            const container = document.getElementById('pdfScrollContainer');
+            container.innerHTML = '<div class="modal-loading">decoding document</div>';
+
+            if (!pdfCache[i]) {
+                try {
+                    pdfCache[i] = await pdfjsLib.getDocument(lab.file).promise;
+                } catch (e) {
+                    container.innerHTML = '<div class="modal-loading" style="color:#ff6b5c">failed to load document</div>';
+                    return;
+                }
+            }
+            currentPdf = pdfCache[i];
+            userZoom = 1;
+            updateZoomLabel();
+            renderAllPages(currentPdf, container);
+        }
+
+        function updateZoomLabel() {
+            document.getElementById('zoomLabel').textContent = Math.round(userZoom * 100) + '%';
+        }
+
+        function zoomBy(delta) {
+            if (!currentPdf) return;
+            userZoom = Math.min(3, Math.max(0.4, +(userZoom + delta).toFixed(2)));
+            updateZoomLabel();
+            renderAllPages(currentPdf, document.getElementById('pdfScrollContainer'));
+        }
+
+        async function renderAllPages(pdf, container) {
+            container.innerHTML = '';
+            const numPages = pdf.numPages;
+            // Oversample beyond device pixels so text/lines stay crisp instead of grainy.
+            const dpr = Math.max(2.5, window.devicePixelRatio || 1);
+
+            for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+                const canvas = document.createElement('canvas');
+                canvas.className = 'pdf-page-canvas';
+                container.appendChild(canvas);
+
+                pdf.getPage(pageNum).then(page => {
+                    const vp = page.getViewport({ scale: 1 });
+                    const desiredWidth = Math.min(1000, window.innerWidth - 60);
+                    let scale = desiredWidth / vp.width;
+
+                    if (scale < 1.2) scale = 1.2;
+                    if (scale > 2.5) scale = 2.5;
+
+                    scale *= 0.85 * userZoom; // base zoom-out 15%, adjustable via controls
+
+                    const vp2 = page.getViewport({ scale: scale });
+
+                    canvas.width = vp2.width * dpr;
+                    canvas.height = vp2.height * dpr;
+                    canvas.style.width = vp2.width + 'px';
+                    canvas.style.height = vp2.height + 'px';
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.scale(dpr, dpr);
+
+                    page.render({ canvasContext: ctx, viewport: vp2 });
+                });
+            }
+        }
+
+        function closeModal() { document.getElementById('pdfModal').classList.remove('open'); }
+        document.getElementById('pdfModal').addEventListener('click', function (e) { if (e.target === this) closeModal(); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+    </script>
+</body>
+
+</html>
