@@ -27,7 +27,8 @@ export default function Hero() {
         </div>
       </div>
 
-      <aside className="hero-certs" aria-label="Certifications">
+      <aside className="hero-certs" aria-label="Verified certifications">
+        <p className="hero-certs__label">verified_credentials</p>
         {certs.map((cert) => (
           <a
             key={cert.name}
@@ -35,9 +36,16 @@ export default function Hero() {
             href={cert.verify}
             target="_blank"
             rel="noreferrer"
-            title={`${cert.name} — verify credential`}
+            aria-label={`Verify ${cert.name} credential (opens in a new tab)`}
           >
-            <img src={cert.badge} alt={`${cert.issuer} logo`} loading="lazy" />
+            <span className="hero-cert__badge">
+              <img src={cert.badge} alt={`${cert.issuer} logo`} loading="lazy" />
+            </span>
+            <span className="hero-cert__meta">
+              <span className="hero-cert__name">{cert.name}</span>
+              <span className="hero-cert__issuer">{cert.issuer}</span>
+              <span className="hero-cert__verify">verify_credential ↗</span>
+            </span>
           </a>
         ))}
       </aside>
