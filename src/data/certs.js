@@ -17,7 +17,7 @@ export const certs = [
   {
     name: 'CompTIA Security+',
     issuer: 'CompTIA',
-    badge: 'badges/Security+-jpg.jpg',
+    badge: 'badges/security-plus.png',
     verify:
       'https://cp.certmetrics.com/CompTIA/en/public/verify/credential/722f3310f2be450cb7ba5d876f7cca06',
   },

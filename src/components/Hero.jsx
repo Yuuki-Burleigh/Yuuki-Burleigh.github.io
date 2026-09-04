@@ -3,21 +3,6 @@ import { certs, profile } from '../data/certs'
 export default function Hero() {
   return (
     <header className="hero">
-      <aside className="hero-certs" aria-label="Certifications">
-        {certs.map((cert) => (
-          <a
-            key={cert.name}
-            className="hero-cert"
-            href={cert.verify}
-            target="_blank"
-            rel="noreferrer"
-            title={`${cert.name} — verify credential`}
-          >
-            <img src={cert.badge} alt={`${cert.issuer} logo`} loading="lazy" />
-          </a>
-        ))}
-      </aside>
-
       <div className="terminal">
         <div className="term-bar">
           <i /><i /><i />
@@ -41,6 +26,21 @@ export default function Hero() {
           </div>
         </div>
       </div>
+
+      <aside className="hero-certs" aria-label="Certifications">
+        {certs.map((cert) => (
+          <a
+            key={cert.name}
+            className="hero-cert"
+            href={cert.verify}
+            target="_blank"
+            rel="noreferrer"
+            title={`${cert.name} — verify credential`}
+          >
+            <img src={cert.badge} alt={`${cert.issuer} logo`} loading="lazy" />
+          </a>
+        ))}
+      </aside>
     </header>
   )
 }
