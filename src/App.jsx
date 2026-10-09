@@ -1,4 +1,3 @@
-import Backdrop from './components/Backdrop'
 import StatusBar from './components/StatusBar'
 import Hero from './components/Hero'
 import Experience from './components/Experience'
@@ -9,15 +8,15 @@ import Footer from './components/Footer'
 export default function App() {
   return (
     <>
-      <Backdrop />
+      <a className="skip-link" href="#content">Skip to content</a>
       <StatusBar />
-      <div className="wrap">
+      <main className="wrap" id="content" tabIndex={-1}>
         <Hero />
         <Experience />
         <Labs />
         <Certs />
         <Footer />
-      </div>
+      </main>
     </>
   )
 }

@@ -7,8 +7,8 @@
   --line: #23262b;
   --line-2: #2e3238;
   --txt: #eef0f2;
-  --txt-dim: #8b9097;
-  --txt-faint: #5a5f66;
+  --txt-dim: #b5b8bd;
+  --txt-faint: #969ca5;
   --amber: #ffaa3c;
   --amber-soft: #ffbf6b;
   --amber-glow: rgba(255, 170, 60, 0.16);
@@ -27,7 +27,8 @@ body {
   color: var(--txt);
   font-family: var(--font-body);
   min-height: 100vh;
-  overflow-x: hidden;
+  font-size: 16px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }

@@ -9,17 +9,33 @@ export default function PdfModal({ lab, onClose }) {
   const [zoom, setZoom] = useState(1)
   const [pages, setPages] = useState(0)
   const [loading, setLoading] = useState(true)
+  const dialogRef = useRef(null)
   const pagesRef = useRef(null)
   const pdfRef = useRef(null)
 
   // Esc to close.
   useEffect(() => {
-    const onKey = (e) => e.key === 'Escape' && onClose()
+    const previous = document.activeElement
+    const main = document.querySelector('main')
+    const siblings = [...document.querySelectorAll('.statusbar, .skip-link'), ...[...main.children].filter(child => child.id !== 'work'), ...[...document.querySelector('#work').children].filter(child => !child.classList.contains('viewer'))]
+    siblings.forEach(el => el.inert = true)
+    dialogRef.current.querySelector('button').focus()
+    const onKey = (e) => {
+      if (e.key === 'Escape') onClose()
+      if (e.key === 'Tab') {
+        const controls = dialogRef.current.querySelectorAll('button, a[href]')
+        const first = controls[0], last = controls[controls.length - 1]
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus() }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
+      }
+    }
     window.addEventListener('keydown', onKey)
     document.body.style.overflow = 'hidden'
     return () => {
       window.removeEventListener('keydown', onKey)
       document.body.style.overflow = ''
+      siblings.forEach(el => el.inert = false)
+      previous?.focus()
     }
   }, [onClose])
 
@@ -77,12 +93,12 @@ export default function PdfModal({ lab, onClose }) {
   }
 
   return (
-    <div className="viewer" onClick={onClose}>
+    <div className="viewer" ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="viewer-title" onClick={onClose}>
       <div className="viewer__panel" onClick={(e) => e.stopPropagation()}>
         <div className="viewer__bar">
           <div className="viewer__meta">
             <span className="viewer__tag">DOC&gt;</span>
-            <span className="viewer__name">{lab.title}</span>
+            <span id="viewer-title" className="viewer__name">{lab.title}</span>
             {pages > 0 && <span className="viewer__count viewer__pages-label">{pages}p</span>}
           </div>
           <div className="viewer__tools">

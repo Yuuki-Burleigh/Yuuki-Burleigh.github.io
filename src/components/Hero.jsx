@@ -1,3 +1,4 @@
+import Topology from './Topology'
 import { certs, profile } from '../data/certs'
 
 export default function Hero() {
@@ -27,6 +28,7 @@ export default function Hero() {
         </div>
       </div>
 
+      <Topology />
       <aside className="hero-certs" aria-label="Verified certifications">
         <p className="hero-certs__label">verified_credentials</p>
         {certs.map((cert) => (

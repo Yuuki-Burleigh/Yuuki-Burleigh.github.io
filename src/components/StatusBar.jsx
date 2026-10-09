@@ -13,7 +13,7 @@ export default function StatusBar() {
     <div className="statusbar">
       <span className="dot" />
       <span>node://yuuki-burleigh</span>
-      <span className="seg">— SEC · NET · CLOUD</span>
+      <nav aria-label="Sections"><a href="#experience">Experience</a><a href="#work">Lab documentation</a><a href="#certs">Certifications</a></nav>
       <span className="right">{clock} UTC</span>
     </div>
   )

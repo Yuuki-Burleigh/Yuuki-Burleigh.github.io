@@ -57,9 +57,9 @@ export default function LabCard({ lab, index, onOpen }) {
         </div>
         <h3 className="lab-title">{lab.title}</h3>
         <p className="lab-desc">{lab.desc}</p>
-        <button className="view-btn" onClick={(e) => { e.stopPropagation(); open() }}>
+        <span className="view-btn">
           access_file →
-        </button>
+        </span>
       </div>
     </article>
   )
