@@ -1,26 +1,23 @@
 import { useEffect, useState } from 'react'
-import { profile } from '../data/certs'
 
+const sections = [['experience', 'Experience'], ['work', 'Lab documentation'], ['certs', 'Certifications']]
 export default function Nav() {
-  const [solid, setSolid] = useState(false)
+  const [active, setActive] = useState('experience')
   useEffect(() => {
-    const onScroll = () => setSolid(window.scrollY > 80)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    const update = () => {
+      let current = sections[0][0]
+      for (const [id] of sections) {
+        if (document.getElementById(id)?.getBoundingClientRect().top <= window.innerHeight * 0.4) current = id
+      }
+      setActive(current)
+    }
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    return () => window.removeEventListener('scroll', update)
   }, [])
-
-  return (
-    <header className={`nav ${solid ? 'nav--solid' : ''}`}>
-      <a className="nav__brand" href="#top">
-        <span className="nav__mark">Y</span>
-        <span className="nav__name mono">{profile.first} {profile.last}</span>
-      </a>
-      <nav className="nav__links mono">
-        <a href="#work">Work</a>
-        <a href="#certs">Credentials</a>
-        <a className="btn btn--sm" href="#contact">Contact</a>
-      </nav>
-    </header>
-  )
+  return <nav className="section-nav" aria-label="Portfolio sections">
+    {sections.map(([id, label], i) => <a key={id} href={`#${id}`} aria-current={active === id ? 'location' : undefined}>
+      <span className="nav-index">0{i + 1}</span><span>{label}</span><span className="nav-line" />
+    </a>)}
+  </nav>
 }

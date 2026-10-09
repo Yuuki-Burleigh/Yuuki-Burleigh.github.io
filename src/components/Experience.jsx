@@ -22,10 +22,10 @@ export default function Experience() {
   return (
     <section id="experience">
       <div className="section-header">
-        <div className="section-title">
-          <span className="slash">//</span> Experience
+        <h2 className="section-title">
+          <span className="sheet">Sheet 01</span> Experience
           <span className="count">[ {count} ]</span>
-        </div>
+        </h2>
         <div className="rule" />
       </div>
 

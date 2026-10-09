@@ -17,7 +17,11 @@ export default function LabCard({ lab, index, onOpen }) {
         if (cancelled || !canvasRef.current) return
         const base = page.getViewport({ scale: 1 })
         await renderPage(page, canvasRef.current, 420 / base.width)
-        if (!cancelled) setState('ready')
+        if (!cancelled && canvasRef.current) {
+          canvasRef.current.style.width = '100%'
+          canvasRef.current.style.height = 'auto'
+          setState('ready')
+        }
       } catch {
         if (!cancelled) setState('error')
       }
@@ -57,9 +61,7 @@ export default function LabCard({ lab, index, onOpen }) {
         </div>
         <h3 className="lab-title">{lab.title}</h3>
         <p className="lab-desc">{lab.desc}</p>
-        <button className="view-btn" onClick={(e) => { e.stopPropagation(); open() }}>
-          access_file →
-        </button>
+        <span className="view-btn">View PDF <span aria-hidden="true">↗</span></span>
       </div>
     </article>
   )

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { loadPdf, renderPage } from '../lib/pdf'
 
 const STEP = 0.15
@@ -11,15 +12,30 @@ export default function PdfModal({ lab, onClose }) {
   const [loading, setLoading] = useState(true)
   const pagesRef = useRef(null)
   const pdfRef = useRef(null)
+  const panelRef = useRef(null)
 
   // Esc to close.
   useEffect(() => {
-    const onKey = (e) => e.key === 'Escape' && onClose()
+    const previous = document.activeElement
+    const root = document.getElementById('root')
+    root?.setAttribute('inert', '')
+    panelRef.current?.querySelector('button')?.focus()
+    const onKey = (e) => {
+      if (e.key === 'Escape') onClose()
+      if (e.key === 'Tab') {
+        const controls = [...panelRef.current.querySelectorAll('button, a[href]')]
+        const first = controls[0], last = controls[controls.length - 1]
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus() }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
+      }
+    }
     window.addEventListener('keydown', onKey)
     document.body.style.overflow = 'hidden'
     return () => {
       window.removeEventListener('keydown', onKey)
       document.body.style.overflow = ''
+      root?.removeAttribute('inert')
+      previous?.focus()
     }
   }, [onClose])
 
@@ -76,13 +92,13 @@ export default function PdfModal({ lab, onClose }) {
     render(clamped)
   }
 
-  return (
-    <div className="viewer" onClick={onClose}>
-      <div className="viewer__panel" onClick={(e) => e.stopPropagation()}>
+  return createPortal(
+    <div className="viewer" role="dialog" aria-modal="true" aria-labelledby="lab-title" onClick={onClose}>
+      <div ref={panelRef} className="viewer__panel" onClick={(e) => e.stopPropagation()}>
         <div className="viewer__bar">
           <div className="viewer__meta">
             <span className="viewer__tag">DOC&gt;</span>
-            <span className="viewer__name">{lab.title}</span>
+            <span id="lab-title" className="viewer__name">{lab.title}</span>
             {pages > 0 && <span className="viewer__count viewer__pages-label">{pages}p</span>}
           </div>
           <div className="viewer__tools">
@@ -98,6 +114,6 @@ export default function PdfModal({ lab, onClose }) {
           <div ref={pagesRef} className="viewer__pages" />
         </div>
       </div>
-    </div>
+    </div>, document.body
   )
 }

@@ -6,10 +6,10 @@ export default function Certs() {
   return (
     <section id="certs">
       <div className="section-header">
-        <div className="section-title">
-          <span className="slash">//</span> Certifications
+        <h2 className="section-title">
+          <span className="sheet">Sheet 03</span> Certifications
           <span className="count">[ {count} ]</span>
-        </div>
+        </h2>
         <div className="rule" />
       </div>
 

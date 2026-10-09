@@ -11,10 +11,10 @@ export default function Labs() {
   return (
     <section id="work">
       <div className="section-header">
-        <div className="section-title">
-          <span className="slash">//</span> Lab Documentation
+        <h2 className="section-title">
+          <span className="sheet">Sheet 02</span> Lab Documentation
           <span className="count">[ {count} ]</span>
-        </div>
+        </h2>
         <div className="rule" />
       </div>
 
