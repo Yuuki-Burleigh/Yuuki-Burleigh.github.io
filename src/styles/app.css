@@ -208,7 +208,7 @@ section { margin-bottom: clamp(56px, 8vw, 110px); }
 .lab-card::before, .lab-card::after {
   content: ""; position: absolute; width: 16px; height: 16px;
   border-color: var(--amber); opacity: 0;
-  transition: opacity .35s, width .35s, height .35s; z-index: 3;
+  transition: opacity .35s; z-index: 3;
 }
 .lab-card::before { top: 9px; left: 9px; border-top: 2px solid; border-left: 2px solid; }
 .lab-card::after  { bottom: 9px; right: 9px; border-bottom: 2px solid; border-right: 2px solid; }
@@ -349,4 +349,129 @@ footer .sig { color: var(--txt-faint); opacity: .6; }
   .cert-card::before { top: 12px; right: 12px; }
   .statusbar .right { display: none; }
   .viewer__pages-label { display: none; }
+}
+
+/* Console Overdrive: operator panel, domain map, credential modules. */
+.skip-link { position: fixed; top: -80px; left: 20px; z-index: 2000; padding: 12px 20px; background: var(--amber); color: var(--bg); }
+.skip-link:focus { top: 12px; }
+.statusbar { position: sticky; top: 0; z-index: 20; max-width: none; background: var(--bg); min-height: 72px; color: var(--txt-dim); }
+.statusbar nav { display: flex; gap: 26px; margin-left: auto; text-transform: none; letter-spacing: 0; }
+.statusbar nav a { display: flex; align-items: center; min-height: 44px; }
+.statusbar nav a:hover { color: var(--amber); }
+.statusbar .right { margin-left: 24px; font-variant-numeric: tabular-nums; }
+.statusbar .dot { animation: none; box-shadow: none; }
+.wrap { max-width: 1440px; }
+.hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 0; padding: 52px 0 80px; align-items: stretch; }
+.hero .terminal { max-width: none; border-radius: 0; box-shadow: none; background: var(--panel); }
+.term-bar { min-height: 48px; color: var(--txt-dim); }
+.term-body { padding: 32px; }
+.boot-line { opacity: 1; width: fit-content; max-width: 100%; white-space: nowrap; overflow: hidden; animation: boot-type 1.2s steps(35, end) both; font-size: 12px; }
+.boot-line:nth-child(2) { animation-delay: .4s; }
+.boot-line:nth-child(3) { animation-delay: .8s; }
+@keyframes boot-type { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+.hero-name { font-size: clamp(3rem, 7.5vw, 6rem); letter-spacing: -.03em; line-height: 1; margin: 30px 0 20px; animation: none; opacity: 1; text-shadow: none; }
+.hero-title { font-size: 14px; letter-spacing: 1px; margin-bottom: 24px; animation: none; opacity: 1; }
+.hero-links { opacity: 1; animation: none; gap: 8px; }
+.hero-link { padding: 10px 14px; min-height: 44px; }
+.hero-link:first-child { background: var(--amber); border-color: var(--amber); color: var(--bg); }
+.hero-link::before, .hero-link::after { content: none; }
+.topology { min-width: 0; border: 1px solid var(--line-2); border-left: 0; background: #101215; display: flex; flex-direction: column; }
+.topology figcaption, .topology-footer { display: flex; justify-content: space-between; gap: 12px; padding: 13px 18px; font: 12px/1.6 var(--font-mono); color: var(--txt-dim); }
+.topology figcaption { border-bottom: 1px solid var(--line); }
+.topology-caption { color: var(--amber); }
+.topology svg { width: 100%; flex: 1; min-height: 0; }
+.topology-grid { color: #42464b; opacity: .5; }
+.topology-orbit { fill: none; stroke: var(--line-2); stroke-dasharray: 3 8; }
+.topology-edge { stroke: #87623a; fill: none; stroke-width: 1; }
+.topology-node rect { fill: var(--panel); stroke: var(--amber); }
+.topology-node path { stroke: var(--amber); fill: none; }
+.topology-node text { fill: var(--txt-dim); font: 12px var(--font-mono); letter-spacing: 1px; }
+.packet { fill: var(--amber); animation: transmit 5s linear infinite; }
+@keyframes transmit { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+.topology-footer { border-top: 1px solid var(--line); font-size: 10px; align-items: center; }
+.topology-footer a { color: var(--amber); min-height: 24px; }
+.hero-certs { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); width: auto; gap: 0; margin-top: 20px; }
+.hero-certs__label { grid-column: 1 / -1; opacity: 1; animation: none; margin-bottom: 10px; font-size: 11px; }
+.hero-cert { opacity: 1; animation: none; border-radius: 0; padding: 18px; background: var(--panel); box-shadow: none; }
+.hero-cert__name { font-size: 14px; }
+.hero-cert__issuer, .hero-cert__verify { font-size: 11px; }
+.hero-cert__badge { width: 48px; height: 48px; }
+section { scroll-margin-top: 104px; margin-bottom: 80px; }
+.section-header { margin-bottom: 28px; }
+.section-title { font-size: 28px; letter-spacing: 0; }
+.xp-card { padding: 32px; border-radius: 0; display: grid; grid-template-columns: 1fr 1.25fr; gap: 14px 36px; }
+.xp-head { display: block; }
+.xp-title { font-size: 22px; }
+.xp-period { display: block; margin-top: 12px; font-size: 12px; }
+.xp-meta { grid-column: 1; font-size: 13px; }
+.xp-summary { grid-column: 2; grid-row: 1 / 3; margin: 0; font-size: 17px; }
+.xp-points { grid-column: 2; max-width: 70ch; }
+.xp-points li { font-size: 15px; }
+.xp-card:hover, .cert-card:hover { transform: none; box-shadow: none; }
+.lab-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.lab-filters button { font: 12px var(--font-mono); padding: 10px 14px; min-height: 44px; background: transparent; border: 1px solid var(--line-2); color: var(--txt-dim); cursor: pointer; }
+.lab-filters button[aria-pressed="true"] { background: var(--amber); color: var(--bg); border-color: var(--amber); }
+.lab-filters button:hover { border-color: var(--amber); }
+.lab-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.lab-grid > div { display: flex; min-width: 0; }
+.lab-grid > div:nth-child(6n + 1) { grid-column: span 2; }
+.lab-grid > div:nth-child(6n + 1) .lab-card { display: grid; grid-template-columns: 1fr 1fr; }
+.lab-card { border-radius: 0; width: 100%; }
+.pdf-thumb { aspect-ratio: 1.55; }
+.lab-grid > div:nth-child(6n + 1) .pdf-thumb { aspect-ratio: auto; height: 100%; }
+.lab-card:focus-visible, .lab-card:hover { border-color: var(--amber); transform: none; box-shadow: inset 0 0 24px -18px var(--amber); }
+.lab-card::before, .lab-card::after { transition: opacity .3s; }
+.lab-card:focus-visible .scanline { opacity: 1; animation: scan 2.4s linear infinite; }
+.lab-desc { font-size: 15px; line-height: 1.65; }
+.lab-title { font-size: 21px; }
+.lab-tag { letter-spacing: 0; font-size: 11px; }
+.lab-body { padding: 22px; }
+.view-btn { color: var(--amber); }
+.cert-card { border-radius: 0; }
+.cert-card::before { color: var(--amber); }
+footer .sig { opacity: 1; }
+footer a { display: inline-flex; align-items: center; min-height: 44px; overflow-wrap: anywhere; }
+.viewer { animation: none; }
+.viewer__bar { flex-wrap: wrap; }
+.viewer__meta { flex-basis: 100%; }
+.viewer__tools { flex-wrap: wrap; }
+.viewer__tools button, .viewer__dl { min-height: 44px; }
+.viewer__pages { align-items: flex-start; }
+.viewer__page { max-width: none; flex-shrink: 0; }
+@media (max-width: 1000px) {
+  .statusbar .right { display: none; }
+  .hero-name { font-size: 64px; }
+  .hero-cert { padding: 12px; }
+  .hero-cert__badge { width: 36px; height: 36px; }
+  .lab-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .statusbar { padding: 10px 20px 4px; gap: 6px; }
+  .statusbar nav { width: 100%; margin: 0; justify-content: space-between; gap: 12px; font-size: 11px; }
+  .hero { grid-template-columns: 1fr; padding: 32px 0 64px; }
+  .hero-name { font-size: clamp(48px, 13vw, 76px); }
+  .term-body { padding: 24px 20px 30px; }
+  .hero-title { font-size: 12px; letter-spacing: .4px; }
+  .topology { border-left: 1px solid var(--line-2); border-top: 0; }
+  .topology svg { flex: auto; }
+  .hero-certs { grid-template-columns: 1fr; }
+  .hero-cert { padding: 16px; }
+  .hero-cert__badge { width: 44px; height: 44px; }
+  section { margin-bottom: 64px; }
+  .section-title { font-size: 23px; gap: 8px; }
+  .section-title .count { font-size: 11px; }
+  .xp-card { display: block; padding: 24px 20px; }
+  .xp-summary { margin: 20px 0; }
+  .lab-grid { grid-template-columns: 1fr; }
+  .lab-grid > div:nth-child(6n + 1) { grid-column: auto; }
+  .lab-grid > div:nth-child(6n + 1) .lab-card { display: flex; }
+  .lab-grid > div:nth-child(6n + 1) .pdf-thumb { aspect-ratio: 1.55; height: auto; }
+  .viewer__bar { gap: 10px; padding: 12px; }
+  .viewer__tools { gap: 6px; }
+  .viewer__tools button, .viewer__dl { padding: 8px; font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .boot-line { clip-path: none; }
+  .packet { offset-distance: 50%; }
 }
