@@ -1,0 +1,61 @@
+/* clip, not hidden: hidden would make body a scroll container and break the sticky film stage */
+body { overflow-x: clip; }
+/* Hero: the first frame of the film runs full-bleed behind the operator terminal. */
+.hero { position: relative; min-height: min(880px, calc(100vh - 56px)); }
+.hero-backdrop { position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); z-index: -1; pointer-events: none;
+  background: linear-gradient(90deg, var(--bg) 0%, rgba(11,12,14,.88) 28%, rgba(11,12,14,.25) 60%, rgba(11,12,14,.45) 100%),
+              linear-gradient(0deg, var(--bg) 0%, rgba(11,12,14,0) 30%), linear-gradient(180deg, var(--bg) 0%, rgba(11,12,14,0) 14%),
+              url('/media/signal/plate.webp') right center / cover no-repeat; }
+.hero-follow { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; margin-top: 22px; padding: 0 2px; font: 500 .8rem var(--font-mono); letter-spacing: .04em; color: var(--amber); text-transform: uppercase; border-bottom: 1px solid rgba(255,170,60,.35); }
+.hero-follow:hover, .hero-follow:focus-visible { border-bottom-color: var(--amber); }
+.hero-follow span { display: inline-block; animation: follow-drop 1.8s ease-in-out infinite; }
+@keyframes follow-drop { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+.signal-path { position: relative; width: calc(100vw - 11px); margin-left: calc((100% - 100vw + 11px) / 2); isolation: isolate; }
+.signal-stage { position: sticky; top: 0; height: 100vh; background-color: var(--bg); background-position: center; background-size: cover; }
+.signal-stage canvas { display: block; width: 100%; height: 100%; }
+.signal-stage::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, var(--bg) 0%, rgba(11,12,14,0) 14%, rgba(11,12,14,0) 86%, var(--bg) 100%); }
+.signal-chapters { position: relative; margin-top: -100vh; padding-bottom: 100vh; display: flow-root; }
+.signal-chapter { height: 260vh; margin-bottom: -100vh; position: relative; }
+.signal-chapter[data-active="false"] .signal-hud { opacity: 0; pointer-events: none; }
+.signal-hud { position: sticky; top: 0; min-height: 100vh; width: min(760px, 58%); padding: clamp(28px, 6vh, 72px) clamp(24px, 7vw, 120px) clamp(28px, 6vh, 72px) clamp(24px, 4vw, 64px); display: flex; flex-direction: column; justify-content: center; background: linear-gradient(90deg, rgba(11,12,14,.9) 0%, rgba(11,12,14,.78) 55%, rgba(11,12,14,0) 100%); text-shadow: 0 1px 12px rgba(0,0,0,.6); }
+.signal-hud > * { max-width: 520px; }
+.signal-readout { display: flex; justify-content: space-between; gap: 16px; font: .75rem var(--font-mono); color: var(--amber); font-variant-numeric: tabular-nums; }
+.signal-hud h2 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 5rem); line-height: 1.1; margin: 24px 0 16px; text-wrap: balance; }
+.signal-hud p { color: var(--txt-dim); font-size: .95rem; max-width: 42ch; }
+.signal-hud progress { appearance: none; width: 100%; height: 2px; border: 0; margin: 28px 0 12px; background: var(--line-2); color: var(--amber); }
+.signal-hud progress::-webkit-progress-bar { background: var(--line-2); }
+.signal-hud progress::-webkit-progress-value { background: var(--amber); }
+.signal-hud progress::-moz-progress-bar { background: var(--amber); }
+.signal-labs button { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; min-height: 52px; padding: 16px 0; border: 0; border-bottom: 1px solid var(--line-2); border-radius: 0; background: transparent; color: var(--txt); text-align: left; font: .85rem/1.6 var(--font-body); cursor: pointer; }
+.signal-labs button span { color: var(--amber); }
+.signal-labs button:hover { color: var(--amber); }
+.signal-path--still .signal-chapters { margin-top: 0; padding-bottom: 0; }
+.signal-path--still .signal-chapter[data-active="false"] .signal-hud { opacity: 1; pointer-events: auto; }
+.signal-path--still .signal-chapter { height: auto; margin-bottom: 0; min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; background: var(--bg); }
+.signal-poster { width: 100%; height: 100%; object-fit: cover; grid-column: 2; grid-row: 1; }
+.signal-path--still .signal-hud { position: relative; width: 100%; grid-column: 1; grid-row: 1; min-height: 0; background: var(--bg); }
+.firewall-model { scroll-margin-top: 104px; }   /* clears the sticky status bar, like every other section */
+.firewall-model > p { color: var(--txt-dim); }
+.firewall-model .hardware-keys { font: .75rem/1.8 var(--font-mono); margin: 8px 0 24px; }
+.firewall-stage { height: clamp(300px, 50vw, 560px); position: relative; border: 1px solid var(--line); background: linear-gradient(180deg, #0d0e11 0%, var(--bg) 70%, #101114 100%); }
+.firewall-stage img, .firewall-stage canvas { width: 100%; height: 100%; display: block; object-fit: contain; }
+.firewall-stage canvas { position: absolute; inset: 0; cursor: grab; }
+.firewall-stage canvas:active { cursor: grabbing; }
+.firewall-stage--ready img { visibility: hidden; }
+@media (max-width: 768px) {
+  .hero-backdrop { background: linear-gradient(0deg, var(--bg) 0%, rgba(11,12,14,.9) 45%, rgba(11,12,14,.35) 100%), url('/media/signal/plate.webp') 70% top / cover no-repeat; }
+  .signal-hud { width: 100%; min-height: 100svh; padding: 26px 24px; justify-content: flex-end; background: linear-gradient(0deg, rgba(11,12,14,.98) 0%, rgba(11,12,14,.94) 58%, rgba(11,12,14,.15) 85%); }
+  .signal-hud h2 { margin: 16px 0 12px; }
+  .signal-hud p { font-size: .875rem; }
+  .signal-hud progress { margin: 20px 0 4px; }
+  .signal-labs button { padding: 12px 0; font-size: .8rem; }
+  .signal-path--still .signal-chapter { display: flex; flex-direction: column; min-height: 0; }
+  .signal-poster { height: auto; aspect-ratio: 16 / 9; }
+  .signal-path--still .signal-hud { padding: 24px; }
+}
+
+@media (max-width: 480px) {
+  .statusbar nav { flex-wrap: nowrap; gap: 16px; justify-content: flex-start; overflow-x: auto; scrollbar-width: none; max-width: 100%; }
+  .statusbar nav a { white-space: nowrap; flex-shrink: 0; }
+  .statusbar nav { -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); mask-image: linear-gradient(90deg, #000 85%, transparent); padding-right: 24px; }
+}

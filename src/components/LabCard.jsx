@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { loadPdf, renderPage } from '../lib/pdf'
+// pdf.js (~350 kB) is fetched on first use instead of shipping in the entry bundle.
+const pdfLib = () => import('../lib/pdf')
+const loadPdf = async (file) => (await pdfLib()).loadPdf(file)
+const renderPage = async (...args) => (await pdfLib()).renderPage(...args)
 
 // Console "case file": the lab's real PDF first page is the card image
 // (amber-washed, hover scanline), with animated corner brackets.

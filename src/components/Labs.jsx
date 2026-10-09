@@ -1,13 +1,11 @@
 import { useState } from 'react'
 import { labs } from '../data/labs'
 import LabCard from './LabCard'
-import PdfModal from './PdfModal'
 import Reveal from './Reveal'
 
-export default function Labs() {
+export default function Labs({ onOpen }) {
   const [filter, setFilter] = useState('All')
   const tags = ['All', ...new Set(labs.map(lab => lab.tag))]
-  const [open, setOpen] = useState(null)
   const count = String(labs.length).padStart(2, '0')
 
   return (
@@ -26,12 +24,12 @@ export default function Labs() {
       <div className="grid lab-grid">
         {labs.map((lab, i) => (filter === 'All' || filter === lab.tag) && (
           <Reveal key={lab.file} delay={(i % 3) * 0.06}>
-            <LabCard lab={lab} index={i} onOpen={setOpen} />
+            <LabCard lab={lab} index={i} onOpen={index => onOpen(labs[index])} />
           </Reveal>
         ))}
       </div>
 
-      {open !== null && <PdfModal lab={labs[open]} onClose={() => setOpen(null)} />}
+
     </section>
   )
 }

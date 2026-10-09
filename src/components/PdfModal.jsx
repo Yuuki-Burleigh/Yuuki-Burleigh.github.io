@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { loadPdf, renderPage } from '../lib/pdf'
+// pdf.js (~350 kB) is fetched on first use instead of shipping in the entry bundle.
+const pdfLib = () => import('../lib/pdf')
+const loadPdf = async (file) => (await pdfLib()).loadPdf(file)
+const renderPage = async (...args) => (await pdfLib()).renderPage(...args)
 
 const STEP = 0.15
 const MIN = 0.4
@@ -17,7 +20,7 @@ export default function PdfModal({ lab, onClose }) {
   useEffect(() => {
     const previous = document.activeElement
     const main = document.querySelector('main')
-    const siblings = [...document.querySelectorAll('.statusbar, .skip-link'), ...[...main.children].filter(child => child.id !== 'work'), ...[...document.querySelector('#work').children].filter(child => !child.classList.contains('viewer'))]
+    const siblings = [main, ...document.querySelectorAll('.statusbar, .skip-link')]
     siblings.forEach(el => el.inert = true)
     dialogRef.current.querySelector('button').focus()
     const onKey = (e) => {

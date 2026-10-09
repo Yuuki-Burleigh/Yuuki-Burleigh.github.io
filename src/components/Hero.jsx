@@ -1,9 +1,9 @@
-import Topology from './Topology'
 import { certs, profile } from '../data/certs'
 
 export default function Hero() {
   return (
     <header className="hero">
+      <div className="hero-backdrop" aria-hidden="true" />
       <div className="terminal">
         <div className="term-bar">
           <i /><i /><i />
@@ -25,10 +25,10 @@ export default function Hero() {
             <a className="hero-link" href={profile.linkedin} target="_blank" rel="noreferrer">linkedin</a>
             <a className="hero-link" href={profile.github} target="_blank" rel="noreferrer">github</a>
           </div>
+          <a className="hero-follow" href="#signal-path">follow_the_signal <span aria-hidden="true">↓</span></a>
         </div>
       </div>
 
-      <Topology />
       <aside className="hero-certs" aria-label="Verified certifications">
         <p className="hero-certs__label">verified_credentials</p>
         {certs.map((cert) => (
