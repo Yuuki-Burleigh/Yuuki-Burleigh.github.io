@@ -20,7 +20,7 @@ export default function PdfModal({ lab, onClose }) {
   useEffect(() => {
     const previous = document.activeElement
     const main = document.querySelector('main')
-    const siblings = [main, ...document.querySelectorAll('.statusbar, .skip-link')]
+    const siblings = [main, ...document.querySelectorAll('.site-header, .skip-link')]
     siblings.forEach(el => el.inert = true)
     dialogRef.current.querySelector('button').focus()
     const onKey = (e) => {

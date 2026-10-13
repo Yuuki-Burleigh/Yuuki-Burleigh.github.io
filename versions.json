@@ -1,0 +1,11 @@
+[
+  { "slug": "v0-network-ops", "ref": "version/v0-network-ops", "name": "Network Ops", "date": "2026-09", "note": "The first redesign: a network operations console with a certification rail." },
+  { "slug": "v1-signal-path", "ref": "version/v1-signal-path", "name": "Signal Path", "date": "2026-10-09", "note": "A scroll-driven packet film and a 3D firewall model." },
+  { "slug": "v1-alt-a", "ref": "version/v1-alt-a", "name": "Signal Path, alternate A", "date": "2026-10-09", "note": "One of two parallel builds of the Signal Path brief." },
+  { "slug": "v1-alt-b", "ref": "version/v1-alt-b", "name": "Signal Path, alternate B", "date": "2026-10-09", "note": "The other parallel build of the Signal Path brief." },
+  { "slug": "v2-rack-film-1", "ref": "version/v2-rack-faceplate", "film": "v2", "name": "Rack Faceplate, film 1", "date": "2026-10-12", "note": "Rack-unit interface; hero film shot scene by scene per device." },
+  { "slug": "v2-rack-film-2", "ref": "version/v2-rack-faceplate", "film": "v3", "name": "Rack Faceplate, film 2", "date": "2026-10-12", "note": "Same interface; hero film set in an on-prem data centre." },
+  { "slug": "v2-rack-film-3", "ref": "version/v2-rack-faceplate", "film": "v35", "name": "Rack Faceplate, film 3", "date": "2026-10-12", "note": "Same interface; one continuous take through the lab." },
+  { "slug": "v2-rack-film-4", "ref": "version/v2-rack-faceplate", "film": "v4", "name": "Rack Faceplate, film 4", "date": "2026-10-12", "note": "Same interface; short transitions with holds at each device." },
+  { "slug": "v3-alt", "ref": "version/v3-alt", "name": "Home Lab, alternate", "date": "2026-10-13", "note": "The parallel build of this design, with the lab drawer beside the plate." }
+]

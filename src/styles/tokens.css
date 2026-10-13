@@ -1,53 +1,22 @@
-/* Design tokens — Network Operations Console cartridge (Websites/DESIGN.md).
-   Phosphor amber on deep charcoal. Single accent. No purple/neon, no Inter. */
 :root {
-  --bg: #0b0c0e;
-  --bg-2: #111316;
-  --panel: #121417;
-  --line: #23262b;
-  --line-2: #2e3238;
-  --txt: #eef0f2;
-  --txt-dim: #b5b8bd;
-  --txt-faint: #969ca5;
-  --amber: #ffaa3c;
-  --amber-soft: #ffbf6b;
-  --amber-glow: rgba(255, 170, 60, 0.16);
-  --cyan: #5fd0d8;
-
-  --font-display: 'Chakra Petch', system-ui, sans-serif;
-  --font-body: 'Sora', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  font-family:'Overpass',system-ui,sans-serif;
+  color-scheme:dark;
+  --ground:#12172A;
+  --raised:#1B2238;
+  --text:#F3EEE4;
+  --muted:#A9AEC2;
+  --amber:#FFB547;
+  --accent-text:#FFB547;
+  --line:#41485e;
+  --tape:#F6F2E8;
+  font-synthesis:none;
 }
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--txt);
-  font-family: var(--font-body);
-  min-height: 100vh;
-  font-size: 16px;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-
-a { color: inherit; text-decoration: none; }
-::selection { background: var(--amber); color: #1a1206; }
-
-::-webkit-scrollbar { width: 11px; height: 11px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: #2c3036; border: 3px solid var(--bg); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: var(--amber); }
-
-:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
-
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after {
-    animation-duration: .01ms !important;
-    animation-delay: 0s !important;
-    transition-duration: .01ms !important;
-  }
+:root[data-theme=light] {
+  color-scheme:light;
+  --ground:#F4EFE6;
+  --raised:#fff;
+  --text:#151A2C;
+  --muted:#545A70;
+  --accent-text:#8A5A00;
+  --line:#c9c4bd;
 }
