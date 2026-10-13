@@ -1,35 +1,5 @@
-import { useState } from 'react'
+import { stops } from '../data/homelab'
 import { labs } from '../data/labs'
-import LabCard from './LabCard'
-import Reveal from './Reveal'
-
 export default function Labs({ onOpen }) {
-  const [filter, setFilter] = useState('All')
-  const tags = ['All', ...new Set(labs.map(lab => lab.tag))]
-  const count = String(labs.length).padStart(2, '0')
-
-  return (
-    <section id="work">
-      <div className="section-header">
-        <h2 className="section-title">
-          <span className="slash">//</span> Lab Documentation
-          <span className="count">[ {count} ]</span>
-        </h2>
-        <div className="rule" />
-      </div>
-
-      <div className="lab-filters" role="group" aria-label="Filter labs by topic">
-        {tags.map(tag => <button key={tag} aria-pressed={filter === tag} onClick={() => setFilter(tag)}>{tag}</button>)}
-      </div>
-      <div className="grid lab-grid">
-        {labs.map((lab, i) => (filter === 'All' || filter === lab.tag) && (
-          <Reveal key={lab.file} delay={(i % 3) * 0.06}>
-            <LabCard lab={lab} index={i} onOpen={index => onOpen(labs[index])} />
-          </Reveal>
-        ))}
-      </div>
-
-
-    </section>
-  )
+  return <section id="work" className="content-section"><div className="section-heading"><h2>Inside the lab</h2><p>Pick a device. Read the configuration, then the proof.</p></div><div className="lab-index">{stops.map(stop => <div className="lab-group" role="group" aria-label={stop.name} key={stop.id}><h3><span className="tape">{stop.name}</span></h3><div>{stop.labs.map(title => { const lab = labs.find(l => l.title === title); return <button className="lab-row" key={title} onClick={() => onOpen(lab)}><span className="lab-title">{title}<span aria-hidden="true">↗</span></span><span className="lab-desc">{lab.desc}</span></button> })}</div></div>)}</div></section>
 }

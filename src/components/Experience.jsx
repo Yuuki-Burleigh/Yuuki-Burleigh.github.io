@@ -1,4 +1,4 @@
-import Reveal from './Reveal'
+
 
 // ponytail: single role, so the data lives here instead of a data/ module.
 const roles = [
@@ -6,7 +6,7 @@ const roles = [
     title: 'Information Technology Technician',
     org: 'Ameri-tide',
     type: 'Part-time · Hybrid',
-    period: 'Aug 2026 — Present',
+    period: 'Aug 2026 to Present',
     location: 'Bellevue, WA',
     summary:
       'Advise on and implement network solutions that deliver reliable connectivity while keeping private financial information secure.',
@@ -18,19 +18,18 @@ const roles = [
 ]
 
 export default function Experience() {
-  const count = String(roles.length).padStart(2, '0')
   return (
-    <section id="experience">
+    <section id="experience" className="content-section">
       <div className="section-header">
         <h2 className="section-title">
-          <span className="slash">//</span> Experience
-          <span className="count">[ {count} ]</span>
+          Experience
+
         </h2>
         <div className="rule" />
       </div>
 
       {roles.map((role, i) => (
-        <Reveal key={role.org} delay={i * 0.08}>
+        <div key={role.org}>
           <article className="xp-card">
             <div className="xp-head">
               <h3 className="xp-title">{role.title}</h3>
@@ -46,7 +45,7 @@ export default function Experience() {
               ))}
             </ul>
           </article>
-        </Reveal>
+        </div>
       ))}
     </section>
   )
