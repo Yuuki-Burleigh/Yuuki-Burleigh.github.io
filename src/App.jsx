@@ -6,6 +6,7 @@ import Experience from './components/Experience'
 import { stops } from './data/homelab'
 import { labs, skills } from './data/labs'
 import { certs, profile } from './data/certs'
+import versions from '../versions.json'
 
 export function LabRows({ stop, onOpen, skill = null }) {
   return (
@@ -160,6 +161,17 @@ export default function App() {
         <footer className="section contact" id="contact">
           <h2>Let’s talk networks.</h2>
           <EmailMe className="email-large" />
+          <section className="versions" aria-label="Earlier versions of this site">
+            <h3>Earlier versions of this site</h3>
+            <ul>
+              {versions.map((v) => (
+                <li key={v.slug}>
+                  <a href={`/versions/${v.slug}/`}>{v.name}</a>
+                  <span>{v.note}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
           <div className="contact-bottom">
             <span>Yuuki Burleigh</span>
             <div>

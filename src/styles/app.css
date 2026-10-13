@@ -1441,3 +1441,45 @@ nav a,
     translate:none !important;
   }
 }
+
+/* Earlier versions, each still live at /versions/<slug>/ */
+.versions {
+  display:block;
+  margin:56px 0 32px;
+}
+.versions h3 {
+  font-size:15px;
+  font-weight:600;
+  color:var(--muted);
+  margin-bottom:12px;
+}
+.versions ul {
+  list-style:none;
+  padding:0;
+  margin:0;
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+  gap:6px 32px;
+}
+.versions li {
+  padding:8px 0;
+}
+.versions a {
+  font-weight:600;
+  background-image:linear-gradient(currentColor, currentColor);
+  background-repeat:no-repeat;
+  background-position:0 100%;
+  background-size:0% 1px;
+  transition:background-size 220ms var(--ease-out), color 160ms ease;
+}
+.versions span {
+  display:block;
+  font-size:14px;
+  color:var(--muted);
+  margin-top:2px;
+}
+@media(hover:hover) and (pointer:fine) {
+  .versions a:hover {
+    background-size:100% 1px;
+  }
+}
