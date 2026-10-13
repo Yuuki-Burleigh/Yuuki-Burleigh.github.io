@@ -1,35 +1,135 @@
 import { useState, useCallback, useEffect } from 'react'
-import SignalPath from './components/SignalPath'
-import FirewallModel from './components/FirewallModel'
 import PdfModal from './components/PdfModal'
-import StatusBar from './components/StatusBar'
-import Hero from './components/Hero'
+import HomeLab from './components/HomeLab'
 import Experience from './components/Experience'
-import Labs from './components/Labs'
-import Certs from './components/Certs'
-import Footer from './components/Footer'
+import { stops } from './data/homelab'
+import { labs } from './data/labs'
+import { certs, profile } from './data/certs'
+
+export function LabRows({ stop, onOpen }) {
+  return (
+    <div className="lab-rows">
+      {stop.labs.map((title) => {
+        const lab = labs.find((item) => item.title === title)
+        return (
+          <button className="lab-row" key={title} onClick={() => onOpen(lab)}>
+            <img className="lab-thumb" src={lab.thumb} alt="" width="96" height="124" loading="lazy" />
+            <span className="lab-text">
+              <strong>{title}</strong>
+              <span className="lab-description">{lab.desc}</span>
+            </span>
+            <span className="file-label">PDF ↗</span>
+          </button>
+        )
+      })}
+    </div>
+  )
+}
 
 export default function App() {
   const [open, setOpen] = useState(null)
+  const [light, setLight] = useState(false)
   const close = useCallback(() => setOpen(null), [])
-  // The browser tries #anchor before React has rendered the section, so deep links (#firewall-model, #work…) land at the top.
+  useEffect(() => {
+    document.documentElement.dataset.theme = light ? 'light' : 'dark'
+  }, [light])
   useEffect(() => {
     const id = decodeURIComponent(location.hash.slice(1))
-    if (!id || new URLSearchParams(location.search).has('solo')) return
-    requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView())
+    if (id) requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView())
   }, [])
   return (
     <>
-      <a className="skip-link" href="#content">Skip to content</a>
-      <StatusBar />
-      <main className="wrap" id="content" tabIndex={-1}>
-        <Hero />
-        <SignalPath onOpen={setOpen} />
-        <FirewallModel />
+      <a className="skip-link" href="#content">
+        Skip to content
+      </a>
+      <header className="site-header">
+        <a className="signature" href="#content">
+          YB<span> / Home lab</span>
+        </a>
+        <nav aria-label="Main">
+          <a href="#work">Labs</a>
+          <a href="#certs">Certifications</a>
+          <a href="#experience">Experience</a>
+        </nav>
+        <div className="header-links">
+          {certs.map((cert) => (
+            <a key={cert.name} href={cert.verify} target="_blank" rel="noreferrer" aria-label={`Verify ${cert.name}`}>
+              {cert.short} ↗
+            </a>
+          ))}
+          <a href={profile.github} target="_blank" rel="noreferrer">
+            GitHub ↗
+          </a>
+          <a href={profile.linkedin} target="_blank" rel="noreferrer">
+            LinkedIn ↗
+          </a>
+          <a className="header-cta" href={`mailto:${profile.email}`}>
+            Email me
+          </a>
+        </div>
+        <button
+          className="theme-toggle"
+          aria-label="Light mode"
+          aria-pressed={light}
+          onClick={() => setLight(!light)}
+        >
+          {light ? 'Evening' : 'Daylight'}
+        </button>
+      </header>
+      <main id="content" tabIndex={-1}>
+        <HomeLab onOpen={setOpen} />
+        <section id="certs" className="section cert-band">
+          <h2 className="cert-band-title">Certifications</h2>
+          <div className="credentials">
+            {certs.map((cert) => (
+              <article className="credential" key={cert.name}>
+                <img src={cert.badge} alt={`${cert.issuer} logo`} width="64" height="64" />
+                <h3>{cert.name}</h3>
+                <p>{cert.issuer}</p>
+                <a href={cert.verify} target="_blank" rel="noreferrer">
+                  Verify credential ↗
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+        <section id="work" className="section lab-index">
+          <div className="section-intro">
+            <h2>
+              Lab reports by device
+            </h2>
+            <p>
+              Explore my lab notes by device. Each PDF includes configurations, screenshots, and proof of
+              functionality.
+            </p>
+          </div>
+          {stops.map((stop, index) => (
+            <div role="group" aria-label={stop.name} className="device-group" key={stop.id}>
+              <h3>
+                <span className="device-number">0{index + 1}</span>
+                <span className="tape">{stop.name}</span>
+                <small>
+                  {stop.labs.length} {stop.labs.length === 1 ? 'lab' : 'labs'}
+                </small>
+              </h3>
+              <LabRows stop={stop} onOpen={setOpen} />
+            </div>
+          ))}
+        </section>
         <Experience />
-        <Labs onOpen={setOpen} />
-        <Certs />
-        <Footer />
+        <footer className="section contact" id="contact">
+          <h2>Let’s talk networks.</h2>
+          <a className="email-large" href={`mailto:${profile.email}`}>
+            Email me
+          </a>
+          <div className="contact-bottom">
+            <span>Yuuki Burleigh</span>
+            <div>
+              <a href={profile.linkedin}>LinkedIn ↗</a>
+              <a href={profile.github}>GitHub ↗</a>
+            </div>
+          </div>
+        </footer>
       </main>
       {open && <PdfModal lab={open} onClose={close} />}
     </>

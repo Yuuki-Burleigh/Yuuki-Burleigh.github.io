@@ -1,5 +1,6 @@
 // The home-lab hero: one generated plate (public/media/homelab/plate-*.webp, 3840x2160, gpt_image_2_5,
-// prompt in Media/higgsfield/2026-10-12-portfolio-v3-plate/final.prompt.txt) and the stops drawn over it.
+// prompt in Media/higgsfield/2026-10-12-portfolio-v3-plate/final.prompt.txt; a duplicate mug handle was inpainted out
+// locally with OpenCV, final-mugfix.png) and the stops drawn over it.
 // Coordinates are percentages of the plate (x of its width, y of its height), measured on the final render.
 // To add a lab: add it to labs.js, then put its exact title in the `labs` list of the device it was built on.
 
@@ -14,6 +15,7 @@ export const plate = {
   alt: 'Illustrated home lab: a desk with a monitor showing a cloud console and a local AI server, and a small rack holding a firewall, a switch and a router.',
 }
 
+// `hint` is a second line on the plate label, for stops whose device is easy to miss in the illustration.
 // `path` is the cable the packet travels to reach this stop from the previous one, as plate points.
 // `hop: true` means no cable is visible for that leg (the packet leaves the house or crosses the internet):
 // the pulse fades out at the previous stop and in at this one instead of drawing a line nobody can see.
@@ -65,6 +67,8 @@ export const stops = [
   {
     id: 'vpn',
     name: 'VPN uplink',
+    // the wall box sits at the plate's top edge, outside the camera at wide desktops: label it on the conduit below
+    label: { x: 74.5, y: 15.5 },
     anchor: { x: 74.5, y: 5.6 },
     path: [
       { x: 74.1, y: 32.2 },
@@ -82,6 +86,7 @@ export const stops = [
   {
     id: 'cloud',
     name: 'Cloud',
+    hint: 'AWS console',
     anchor: { x: 36.3, y: 22.8 },
     hop: true,
     path: [],
@@ -93,6 +98,7 @@ export const stops = [
   {
     id: 'ai',
     name: 'Local AI',
+    hint: 'GPU server',
     anchor: { x: 54.7, y: 22.8 },
     hop: true,
     path: [],
