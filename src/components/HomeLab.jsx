@@ -4,7 +4,7 @@ import { profile } from '../data/certs'
 import { LabRows } from '../App'
 import { labs } from '../data/labs'
 
-export default function HomeLab({ onOpen }) {
+export default function HomeLab({ onOpen, skill = null }) {
   const [current, setCurrent] = useState(0)
   const [drawer, setDrawer] = useState(false)
   const [chosen, setChosen] = useState(false)
@@ -20,7 +20,9 @@ export default function HomeLab({ onOpen }) {
   const playing = !reduced && !chosen && !hover && !focus
   useEffect(() => {
     if (!playing) return
-    const timer = setInterval(() => setCurrent((value) => (value + 1) % stops.length), 4500)
+    const timer = setInterval(() => {
+      if (!document.hidden) setCurrent((value) => (value + 1) % stops.length)
+    }, 4500)
     return () => clearInterval(timer)
   }, [playing])
   const select = (index) => {
@@ -134,6 +136,9 @@ export default function HomeLab({ onOpen }) {
                 className={`tape ${index === current ? 'active' : ''}`}
                 key={device.id}
                 aria-current={index === current ? 'step' : undefined}
+                data-match={
+                  skill ? String(device.labs.some((title) => labs.find((l) => l.title === title).skills.includes(skill))) : undefined
+                }
                 aria-expanded={drawer && index === current}
                 aria-controls="lab-drawer"
                 onClick={() => select(index)}
@@ -157,7 +162,7 @@ export default function HomeLab({ onOpen }) {
               <h2 className="tape active">{stop.name}</h2>
               <button onClick={() => setDrawer(false)}>Close labs ×</button>
             </div>
-            <LabRows stop={stop} onOpen={onOpen} />
+            <LabRows stop={stop} onOpen={onOpen} skill={skill} />
           </div>
         </section>
       )}
@@ -172,7 +177,7 @@ function LabPopout({ stop, onOpen }) {
   const dirX = at.x > 55 ? -1 : 1
   const dirY = at.y < 30 ? 1 : -1
   return (
-    <div className="lab-popout" style={{ left: `${at.x}%`, top: `${at.y}%`, '--dir-x': dirX, '--dir-y': dirY }}>
+    <div className={`lab-popout${dirY > 0 ? ' down' : ''}`} style={{ left: `${at.x}%`, top: `${at.y}%`, '--dir-x': dirX, '--dir-y': dirY }}>
       {stop.labs.map((title, i) => {
         const lab = labs.find((item) => item.title === title)
         return (

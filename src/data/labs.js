@@ -1,6 +1,10 @@
 // Lab documentation. `file` is relative to site root (served from public/labs/).
 // To add a lab: drop the PDF in public/labs/ and add an object here. Its `thumb` is page 1 at 480px:
 //   pdftoppm -f 1 -l 1 -scale-to 480 -png public/labs/<file>.pdf /tmp/t && magick /tmp/t-1.png -quality 78 public/labs/thumbs/<slug>.webp
+// Each lab's `problem` and `did` are condensed from the Purpose section of its own PDF.
+// `skills` use the filter vocabulary below; a recruiter picks one to see the labs that prove it.
+export const skills = ['Routing', 'Switching', 'Wireless', 'Firewalls', 'VPN', 'Palo Alto', 'FortiGate', 'AWS', 'Local AI']
+
 export const labs = [
   {
     title: 'Designing a Multi-Area OSPF Network',
@@ -8,6 +12,9 @@ export const labs = [
     tag: 'Networking',
     file: 'labs/Designing a Multi-Area OSPF Network.pdf',
     thumb: 'labs/thumbs/designing-a-multi-area-ospf-network.webp',
+    skills: ["Routing"],
+    problem: "Route across a growing network without hand-entering every route, and keep traffic moving when a device fails.",
+    did: "Configured multi-area OSPF, splitting the network into areas, with final router configs and proof it converges.",
   },
   {
     title: 'Designing a Multiprotocol Network with BGP',
@@ -15,6 +22,9 @@ export const labs = [
     tag: 'Networking',
     file: 'labs/Designing a Multiprotocol Network with BGP.pdf',
     thumb: 'labs/thumbs/designing-a-multiprotocol-network-with-bgp.webp',
+    skills: ["Routing"],
+    problem: "Connect separate networks that each run a different routing protocol.",
+    did: "Configured eBGP between autonomous systems to join OSPF, EIGRP and IS-IS networks into one routing table.",
   },
   {
     title: 'Layer 2 Attacks and Mitigations',
@@ -22,6 +32,9 @@ export const labs = [
     tag: 'Security',
     file: 'labs/Layer 2 Attacks and Mitigations.pdf',
     thumb: 'labs/thumbs/layer-2-attacks-and-mitigations.webp',
+    skills: ["Switching"],
+    problem: "Unsecured Layer 2 lets an attacker on the LAN intercept or disrupt traffic.",
+    did: "Ran Layer 2 attacks from Kali Linux, then hardened the switch configuration against each one.",
   },
   {
     title: 'FortiGate-40F Factory Reset & Initial SOHO Configuration',
@@ -29,6 +42,9 @@ export const labs = [
     tag: 'Firewall',
     file: 'labs/FortiGate-40F Factory Reset and Inital Configuration.pdf',
     thumb: 'labs/thumbs/fortigate-40f-factory-reset-and-inital-configuration.webp',
+    skills: ["Firewalls", "FortiGate"],
+    problem: "A small office firewall needs a clean, known starting state and baseline security.",
+    did: "Factory-reset a FortiGate-40F and applied a baseline SOHO configuration through its GUI.",
   },
   {
     title: 'PA-220 Firewall for a SOHO Environment',
@@ -36,6 +52,9 @@ export const labs = [
     tag: 'Firewall',
     file: 'labs/Palo Alto 220 Small Office Home Office Firewall Configuration.pdf',
     thumb: 'labs/thumbs/palo-alto-220-small-office-home-office-firewall-configuration.webp',
+    skills: ["Firewalls", "Palo Alto"],
+    problem: "A small office needs one firewall to act as its secure gateway to the internet.",
+    did: "Set up a Palo Alto PA-220 for secure internet access, with the final firewall configuration.",
   },
   {
     title: 'Configuring GlobalProtect RAVPN on a PA-220',
@@ -43,6 +62,9 @@ export const labs = [
     tag: 'Firewall',
     file: 'labs/Configuring GlobalProtect Remote Access VPN on a PA220 Firewall.pdf',
     thumb: 'labs/thumbs/configuring-globalprotect-remote-access-vpn-on-a-pa220-firewall.webp',
+    skills: ["VPN", "Palo Alto", "Firewalls"],
+    problem: "Remote staff need encrypted access to internal networks.",
+    did: "Configured a PA-220 as a GlobalProtect IPsec VPN portal so remote users reach internal resources.",
   },
   {
     title: 'PA-220 Web Filtering for an Elementary School',
@@ -50,6 +72,9 @@ export const labs = [
     tag: 'Firewall',
     file: 'labs/Setting up PA220 Web Filtering for an Elementary School Environment.pdf',
     thumb: 'labs/thumbs/setting-up-pa220-web-filtering-for-an-elementary-school-environment.webp',
+    skills: ["Firewalls", "Palo Alto"],
+    problem: "School users must be kept away from malicious and unsuitable sites.",
+    did: "Built URL filtering policy on a PA-220, working with certificates and TLS/SSL inspection.",
   },
   {
     title: 'Local AI with Web UI Integration',
@@ -57,6 +82,9 @@ export const labs = [
     tag: 'AI / Infrastructure',
     file: 'labs/Setting up Local AI with Web UI Integration.pdf',
     thumb: 'labs/thumbs/setting-up-local-ai-with-web-ui-integration.webp',
+    skills: ["Local AI"],
+    problem: "Bring AI into the workspace without depending on a cloud service.",
+    did: "Deployed a local AI in containers with a web UI, connecting the containers with API keys.",
   },
   {
     title: 'AWS Cloud Foundations: IAM, VPC & EC2',
@@ -64,6 +92,9 @@ export const labs = [
     tag: 'Cloud / AWS',
     file: 'labs/AWS Academy Cloud Foundations – Configuring Identity and Access Management, Virtual Private Cloud, and Elastic Compute Cloud.pdf',
     thumb: 'labs/thumbs/aws-academy-cloud-foundations-configuring-identity-and-access-management-virtual-private-cloud-and-elastic-compute-cloud.webp',
+    skills: ["AWS"],
+    problem: "Cloud access has to follow least privilege.",
+    did: "Created IAM users and policies on least privilege, built a VPC and launched EC2 instances.",
   },
   {
     title: 'AWS Cloud Foundations: EBS, RDS, Load Balancing & Autoscaling',
@@ -71,6 +102,9 @@ export const labs = [
     tag: 'Cloud / AWS',
     file: 'labs/AWS Academy Cloud Foundations – Configuring Elastic Block Storage, Relational Databases, Load Balancing, and Autoscaling.pdf',
     thumb: 'labs/thumbs/aws-academy-cloud-foundations-configuring-elastic-block-storage-relational-databases-load-balancing-and-autoscaling.webp',
+    skills: ["AWS"],
+    problem: "EC2 workloads must survive stops and failures and scale with demand.",
+    did: "Managed EBS volumes and snapshots, then set up RDS, load balancing and Auto Scaling.",
   },
   {
     title: 'WPA2 & WPA2-Enterprise WLAN with a RADIUS Server',
@@ -78,6 +112,9 @@ export const labs = [
     tag: 'Wireless',
     file: 'labs/Configuring a WPA2 and WPA2 Enterprise Wireless Local Area Network with a RADIUS Server.pdf',
     thumb: 'labs/thumbs/configuring-a-wpa2-and-wpa2-enterprise-wireless-local-area-network-with-a-radius-server.webp',
+    skills: ["Wireless", "FortiGate"],
+    problem: "An enterprise WLAN needs per-user authentication, not one shared password.",
+    did: "Built a WPA2 WLAN and a WPA2-Enterprise WLAN on a FortiGate-40F backed by a RADIUS server.",
   },
   {
     title: 'Configuring a Remote Access IPsec VPN on a FortiGate 40F',
@@ -85,5 +122,8 @@ export const labs = [
     tag: 'Firewall',
     file: 'labs/Configuring a Remote Access IPsec VPN on a FortiGate 40F.pdf',
     thumb: 'labs/thumbs/configuring-a-remote-access-ipsec-vpn-on-a-fortigate-40f.webp',
+    skills: ["VPN", "FortiGate", "Firewalls"],
+    problem: "Remote workers need secure access to a separate network.",
+    did: "Configured an IPsec remote access VPN on a FortiGate-40F and logged into a computer on another network.",
   },
 ]
