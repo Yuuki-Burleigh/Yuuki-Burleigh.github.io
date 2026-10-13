@@ -1201,3 +1201,117 @@ nav a {
 .device-group[data-match="false"] {
   display:none;
 }
+
+/* ---- Motion pass 2 (find-animation-opportunities, emil-design-eng, apple-design) ----
+   Hover motion is gated to real pointers; transforms use the individual translate/scale properties so
+   they compose with each element's positioning transform instead of replacing it. */
+body, .hero, .viewer__panel, .lab-drawer, .credential, .skill-chip {
+  transition:background-color 300ms ease, color 300ms ease, border-color 300ms ease;
+}
+.plate-label {
+  transition:background-color 150ms ease, color 150ms ease, translate 150ms var(--ease-out), scale 120ms ease-out;
+}
+.plate-label:active {
+  scale:.97;
+}
+.popout-card:active {
+  scale:.97;
+}
+.lab-row:active {
+  scale:.99;
+}
+.lab-thumb {
+  transition:translate 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
+}
+.lab-row strong,
+.file-label {
+  transition:color 160ms ease, translate 200ms var(--ease-out);
+}
+/* text links: an underline that grows from the left */
+.header-links a:not(.header-cta),
+nav a,
+.credential a,
+.contact-bottom a {
+  background-image:linear-gradient(currentColor, currentColor);
+  background-repeat:no-repeat;
+  background-position:0 calc(100% - 8px);
+  background-size:0% 1px;
+  transition:background-size 220ms var(--ease-out), color 160ms ease;
+}
+@media(hover:hover) and (pointer:fine) {
+  .plate-label:hover,
+  .plate-label.endpoint:hover {
+    background:var(--amber);
+    color:#12172A;
+    translate:0 -2px;
+  }
+  .lab-row {
+    transition:background-color 200ms ease, opacity 200ms ease, scale 120ms ease-out;
+  }
+  .lab-row:hover {
+    background-color:#ffb5470d;
+  }
+  .lab-row:hover .lab-thumb {
+    translate:0 -3px;
+    box-shadow:0 10px 22px #0a0d1a80;
+  }
+  .lab-row:hover strong {
+    color:var(--accent-text);
+  }
+  .lab-row:hover .file-label {
+    translate:2px -2px;
+  }
+  .popout-card {
+    transition-property:transform, clip-path, opacity, translate, box-shadow;
+  }
+  .popout-card:hover {
+    translate:0 -4px;
+    box-shadow:0 16px 30px #0a0d1acc;
+  }
+  .header-links a:not(.header-cta):hover,
+  nav a:hover,
+  .credential a:hover,
+  .contact-bottom a:hover {
+    background-size:100% 1px;
+  }
+  .step-arrow:hover {
+    background:var(--amber);
+    border-color:var(--amber);
+    color:#12172A;
+  }
+  .theme-toggle:hover {
+    border-color:var(--amber);
+  }
+}
+/* PDF viewer: scrim fades, panel settles from 97% (a modal stays centred) */
+.viewer {
+  transition:opacity 200ms ease-out;
+  @starting-style {
+    opacity:0;
+  }
+}
+.viewer__panel {
+  transition:opacity 240ms var(--ease-out), transform 240ms var(--ease-out);
+  @starting-style {
+    opacity:0;
+    transform:scale(.97);
+  }
+}
+.viewer__tools button,
+.viewer__dl {
+  transition:color 150ms ease, scale 120ms ease-out;
+}
+.viewer__tools button:active,
+.viewer__dl:active {
+  scale:.95;
+}
+@media(prefers-reduced-motion:reduce) {
+  .plate-label, .lab-thumb, .lab-row strong, .file-label, .popout-card {
+    translate:none !important;
+  }
+  .viewer__panel {
+    @starting-style {
+      transform:none;
+    }
+  }
+}
