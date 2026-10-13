@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
+import EmailMe from './EmailMe'
 import { stops, plate } from '../data/homelab'
-import { profile } from '../data/certs'
 import { LabRows } from '../App'
 import { labs } from '../data/labs'
 
@@ -64,9 +64,7 @@ export default function HomeLab({ onOpen, skill = null }) {
           <p className="hero-summary">
             I document the network labs I build. Pick a device to open its lab reports.
           </p>
-          <a className="primary" href={`mailto:${profile.email}`}>
-            Email me
-          </a>
+          <EmailMe className="primary" />
         </div>
         <div className={`plate-window${reduced ? ' reduced' : ''}`}>
           <div

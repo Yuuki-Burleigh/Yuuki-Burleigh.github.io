@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
+import EmailMe from './components/EmailMe'
 import PdfModal from './components/PdfModal'
 import HomeLab from './components/HomeLab'
 import Experience from './components/Experience'
@@ -93,9 +94,7 @@ export default function App() {
           <a href={profile.linkedin} target="_blank" rel="noreferrer">
             LinkedIn ↗
           </a>
-          <a className="header-cta" href={`mailto:${profile.email}`}>
-            Email me
-          </a>
+          <EmailMe className="header-cta" />
         </div>
         <button
           className="theme-toggle"
@@ -160,9 +159,7 @@ export default function App() {
         </section>
         <footer className="section contact" id="contact">
           <h2>Let’s talk networks.</h2>
-          <a className="email-large" href={`mailto:${profile.email}`}>
-            Email me
-          </a>
+          <EmailMe className="email-large" />
           <div className="contact-bottom">
             <span>Yuuki Burleigh</span>
             <div>
