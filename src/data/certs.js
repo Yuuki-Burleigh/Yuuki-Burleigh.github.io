@@ -2,6 +2,7 @@
 export const certs = [
   {
     name: 'Cisco Certified Network Associate',
+    short: 'CCNA',
     issuer: 'Cisco',
     badge: 'badges/cisco_logo.jpg',
     verify:
@@ -9,6 +10,7 @@ export const certs = [
   },
   {
     name: 'AWS Certified Cloud Practitioner',
+    short: 'AWS Cloud Practitioner',
     issuer: 'Amazon Web Services',
     badge: 'badges/amazon_web_services_logo.jpg',
     verify:
@@ -16,6 +18,7 @@ export const certs = [
   },
   {
     name: 'CompTIA Security+',
+    short: 'Security+',
     issuer: 'CompTIA',
     badge: 'badges/security-plus.png',
     verify:
