@@ -123,6 +123,7 @@ export default function App() {
             ))}
           </div>
         </section>
+        <Experience />
         <section id="work" className="section lab-index">
           <div className="section-intro">
             <h2>
@@ -157,7 +158,6 @@ export default function App() {
             </div>
           ))}
         </section>
-        <Experience />
         <footer className="section contact" id="contact">
           <h2>Let’s talk networks.</h2>
           <a className="email-large" href={`mailto:${profile.email}`}>

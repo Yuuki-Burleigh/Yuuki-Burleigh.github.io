@@ -160,7 +160,9 @@ export default function HomeLab({ onOpen, skill = null }) {
           <div className="drawer-inner">
             <div className="drawer-heading">
               <h2 className="tape active">{stop.name}</h2>
-              <button onClick={() => setDrawer(false)}>Close labs ×</button>
+              <button onClick={() => setDrawer(false)}>
+                Close labs <span className="close-x" aria-hidden="true">×</span>
+              </button>
             </div>
             <LabRows stop={stop} onOpen={onOpen} skill={skill} />
           </div>
