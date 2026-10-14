@@ -1,0 +1,116 @@
+{
+  "title": "Choose the visual world — Yuuki Burleigh portfolio",
+  "question": "The roll assigned Data-Centre Wayfinding. Keep it, take an alternate, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Data-Centre Wayfinding",
+      "kicker": "THE ROLL",
+      "lineage": "colo-floor signage: row/rack/U labels, aisle markings, floor-tile grid, safety-yellow",
+      "thesis": "The portfolio is a lab floor you walk: every lab is filed at the rack and device it configured.",
+      "palette": ["#0E1012", "#F2F0EA", "#FFC400", "#3A3F45"],
+      "materials": ["isometric floor-tile grid", "screen-printed rack labels", "aisle floor tape"],
+      "viewport": "Isometric plate of one lab row; a packet runs the cable switch→router→firewall→VPN→cloud→AI; each device carries a printed label (R02-U14 SWITCH · 4 LABS) that opens its labs; name, title, 'Email me' on a big signage panel at left.",
+      "risk": "Signage can read cold or like an airport if the labels are not set with real typographic care.",
+      "raised": [
+        {"from": "challenger-lexicon", "raise": "A running head names the span you are in (ROW A · SWITCH → FIREWALL), recomputed as you scroll."},
+        {"from": "challenger-akari", "raise": "Devices sit unlit until the packet reaches them; lit = you are here, the only warm state on the floor."},
+        {"from": "challenger-nixie", "raise": "Rack-unit and port numbers are fixed tabular positions, never decoration and never invented metrics."},
+        {"from": "challenger-itasha", "raise": "The isometric plate runs full-bleed across the hero and breaks across sections, never boxed in a card."}
+      ]
+    },
+    {
+      "id": "model-pick",
+      "label": "Isometric Topology Sheet",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "vendor network diagrams (isometric device stencils, link labels, legend block)",
+      "thesis": "The site is the network diagram of your labs, drawn to engineering-sheet standard.",
+      "palette": ["#0B1620", "#E6EEF3", "#2FA4FF", "#7ED957"],
+      "materials": ["isometric device stencils", "dimension-line link labels", "title block"],
+      "viewport": "One full-width topology sheet; devices as stencils linked by labelled cables; a title block bottom-right holds name, certs, contact.",
+      "risk": "The literal reading of the brief and where most network portfolios land; can look like a Visio export."
+    },
+    {
+      "id": "challenger-ikeda",
+      "label": "Datamatics Field",
+      "verdict": "competitive",
+      "lineage": "Ryoji Ikeda datamatics",
+      "thesis": "Packets as pure data: barcode columns and a sine lattice in black and white, the path traced through them.",
+      "palette": ["#000000", "#FFFFFF"],
+      "materials": ["hairline bar-fields", "monospace numerics", "full-frame inversion"],
+      "viewport": "A wall of bar-columns; the packet path is one inverted column per device; labs pulled into focus per column.",
+      "case": "Holds audience identification (reads as data/network to engineers); loses on clarity: recruiters may not see devices or labs.",
+      "risk": "Fights the pinned isometric device plate; strobing must stop under reduced motion.",
+      "hero": "https://impeccable.style/worlds/cards/ikeda-datamatics-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/ikeda-datamatics.webp"
+    },
+    {
+      "id": "challenger-lexicon",
+      "label": "Lexicon Shoulder & Plate",
+      "verdict": "declined",
+      "lineage": "19th-c. lexicon page",
+      "thesis": "Labs as dictionary entries, colour quarantined in plates.",
+      "palette": ["#141210", "#F1E9D8", "#D2401E"],
+      "materials": ["engraving black", "chromolithograph plates"],
+      "viewport": "Two-column entries with a mineral-style plate of the rack.",
+      "case": "Recruiters don't identify with a lexicon; cream+serif is a known AI look.",
+      "risk": "Bookish costume on a network portfolio.",
+      "kept": "Guide words: the head names the span you are inside.",
+      "hero": "https://impeccable.style/worlds/cards/rw-lexicon-shoulder-and-plate-hero.webp"
+    },
+    {
+      "id": "challenger-akari",
+      "label": "Akari Workshop",
+      "verdict": "declined",
+      "lineage": "Noguchi akari lamps",
+      "thesis": "Labs as paper lanterns lit one at a time.",
+      "palette": ["#F4EBD9", "#C9A774", "#2B2722", "#D2401E"],
+      "materials": ["washi", "bamboo ribs"],
+      "viewport": "Glowing volumes in a dim room.",
+      "case": "No link to network hardware; loses both axes.",
+      "risk": "Soft and decorative.",
+      "kept": "Lit = inhabited: state is light, unlit forms wait.",
+      "hero": "https://impeccable.style/worlds/cards/paper-folds-pleats-deployable-akari-light-sculpture-hero.webp"
+    },
+    {
+      "id": "challenger-nixie",
+      "label": "Nixie Counter",
+      "verdict": "declined",
+      "lineage": "nixie-tube lab counters",
+      "thesis": "Quantities are the interface.",
+      "palette": ["#121212", "#FF7A1A", "#6B6B6B"],
+      "materials": ["glass envelopes", "blackened steel"],
+      "viewport": "Banks of glowing digits.",
+      "case": "Needs metrics the product forbids inventing.",
+      "risk": "Pushes toward fake numbers.",
+      "kept": "Fixed digit positions: numbers are tabular and real.",
+      "hero": "https://impeccable.style/worlds/cards/signals-instruments-nixie-laboratory-counter-hero.webp"
+    },
+    {
+      "id": "challenger-itasha",
+      "label": "Itasha Vinyl Wrap",
+      "verdict": "declined",
+      "lineage": "printed car wraps",
+      "thesis": "Art breaking across body panels.",
+      "palette": ["#FF2E88", "#00C2FF", "#FFE600", "#111111"],
+      "materials": ["gloss vinyl", "sponsor strips"],
+      "viewport": "Illustration across panels, sponsor strip nav.",
+      "case": "Off-audience for recruiters; loses both.",
+      "risk": "Novelty.",
+      "kept": "Art scaled to break across panels, never boxed.",
+      "hero": "https://impeccable.style/worlds/cards/pop-culture-shelf-itasha-vinyl-wrap-hero.webp"
+    }
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "buildPath": {"value": "code", "toggle": false},
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "Dark tech portfolio: hero, about, projects grid, certs, contact — executed impeccably.",
+    "palette": ["#0A0A0A", "#EDEDED", "#4F8CFF"],
+    "materials": ["clean grid", "project cards"],
+    "viewport": "Name and title left, illustration right, CTA buttons below.",
+    "risk": "Indistinguishable from every other tech portfolio by design."
+  },
+  "steer": true
+}
