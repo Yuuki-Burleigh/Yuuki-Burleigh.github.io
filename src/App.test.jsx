@@ -54,7 +54,7 @@ test('experience content survives verbatim', () => {
     'Built Zapier workflows for AI email triage, consolidating multiple email providers into one centralized dashboard, plus a loan pipeline workflow tracking the assigned employee, last update, and current stage of every loan.',
     'Brought a commercial unit online end to end: connected the existing overhead coax from the unit to the electrical room',
     'Built an Ethernet link-tester utility to trace unlabeled wall outlets',
-    'Administer Microsoft 365 for the firm, including a SharePoint site',
+    'Administer Microsoft 365 for the firm, including a SharePoint site with a Loans list and Loan Files library for tracking loans',
   ]) expect(text).toContain(s)
 })
 
