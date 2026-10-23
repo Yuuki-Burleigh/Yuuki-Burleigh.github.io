@@ -13,7 +13,7 @@ const roles = [
     points: [
       'Segmented the network with VLANs and dedicated SSIDs so guests and unauthorized users cannot reach or intercept client financial data, and secured wireless access with WPA3-Enterprise authentication backed by RADIUS.',
       'Built Zapier workflows for AI email triage, consolidating multiple email providers into one centralized dashboard, plus a loan pipeline workflow tracking the assigned employee, last update, and current stage of every loan.',
-      'Brought a commercial unit online end to end: ran the building coax from the unit to the electrical room, connected the ISP modem and router, and patched electrical-room Ethernet ports through to a switch serving the wired clients in a second room.',
+      'Brought a commercial unit online end to end: connected the existing overhead coax from the unit to the electrical room, then connected the ISP modem and router, and patched electrical-room Ethernet ports through to a switch serving the wired clients in a second room.',
       'Built an Ethernet link-tester utility to trace unlabeled wall outlets to their electrical-room ports, mapping every outlet to its port one by one.',
       'Administer Microsoft 365 for the firm, including a SharePoint site with a Loans list and Loan Files library that the loan pipeline runs on.',
     ],
